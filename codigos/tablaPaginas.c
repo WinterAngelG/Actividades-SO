@@ -26,7 +26,7 @@ typedef struct Pagina
 typedef struct Proceso
 {
     int id;
-    int tamaño;
+    int tamano;
     int paginas;
     Pagina *tablaPaginas;
 } Proceso;
@@ -44,9 +44,9 @@ void crearProceso(Proceso procesos[], int tamMarco)
     printf("Ingresa el ID del proceso: ");
     scanf("%d", &nuevo->id);
     printf("Ingresa el tamaño del proceso: ");
-    scanf("%d", &nuevo->tamaño);
+    scanf("%d", &nuevo->tamano);
 
-    nuevo->paginas = (nuevo->tamaño + tamMarco - 1) / tamMarco;
+    nuevo->paginas = (nuevo->tamano + tamMarco - 1) / tamMarco;
     nuevo->tablaPaginas = (Pagina*)calloc(nuevo->paginas, sizeof(Pagina));
 
     for (int i = 0; i < nuevo->paginas; i++)
