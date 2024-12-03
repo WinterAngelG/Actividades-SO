@@ -75,6 +75,10 @@
 
     Para hacer esto el algoritmo utiliza una lista enlazada de todas las paginas cargadas en memoria con la página de uso más reciente en la parte de adelante y la de uso menos reciente en la parte final. El mayor problema de este algoritmo es que es costoso y complejo porque se tiene que actualizar la lista enlazada cada que se referencia alguna pagina ya que se debe buscar la página, eliminarla y mover todas las demás paginas por lo que lleva mucho tiempo de procesamiento.
 
+    **¿Cuál consideras más eficiente y por qué?**
+
+    Si bien considero que ninguno de los algoritmos es perfecto porque cada uno tiene sus propios problemas si me inclino mas por el algoritmo de **LRU** creo que tiene un buen enfoque de eliminacion de pagina basado en la pagina menos usada frecuentemente ya que de esta forma se evita eliminar paginas importantes para el proceso lo que es mas eficiente ya que de esta forma no se generan tantos fallos de pagina en los que se tenga que reemplazar por lo que ahorra muchos recursos al SO.
+
 ---
 ### **3.2 Memoria Real**
 
