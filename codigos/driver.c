@@ -34,8 +34,8 @@ Dispositivo USB;
 
 void inicializacion(){
 
-    strcpy(USB.nombreDispositivo, "USB de LALO");
-    strcpy(USB.memoria, "Hola a todos putos.");
+    strcpy(USB.nombreDispositivo, "USB de ANGEL");
+    strcpy(USB.memoria, "SOY LA INFORMACION DE LECTURA");
     USB.id = 1;
     USB.interrupcion = 0;
 
@@ -85,7 +85,7 @@ void escritura(){
 
         printf("Escribiendo datos hacia la usb.....\n");
 
-        strcpy(buffer, "INFORMACION DE ESCRITURA JIJI."); //El proceso guarda los datos que quiere guardar en el dispositivo fisico a traves del buffer
+        strcpy(buffer, "SOY LA INFORMACION DE ESCRITURA."); //El proceso guarda los datos que quiere guardar en el dispositivo fisico a traves del buffer
         strcpy(driverUSB.controladora.datos, buffer); // La informacion pasa del buffer al registro de datos de la controladora.
         strcpy(USB.memoria, driverUSB.controladora.datos); //Una vez que la info esta en la controladora la pasa a la memoria USB.
         sleep(2);
@@ -99,7 +99,7 @@ void mostrarINFOUSB(){
 
     printf("El proceso termino de usar la USB. \nLa informacion final que tiene es: %s\n", USB.memoria);
     sleep(2);
-    printf("Terminando simulacion....putos perros ya estoy hasta la verga.\n");
+    printf("Terminando simulacion....\n");
     sleep(5);
 
     printf("Simulacion  terminada.");
