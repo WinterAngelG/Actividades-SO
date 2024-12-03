@@ -1213,4 +1213,13 @@ int main()
 ### **Avanzados**
  #### **1. Explica cómo los sistemas operativos modernos optimizan las operaciones de entrada/salida con el uso de memoria caché.**
 
+ Basicamente una memoria cache es un medio de almacenamiento como el de la ram para guardar datos pero esta memoria es mucho mas rapida que la ram y por lo tanto es mas costoso por lo que estas memorias son de almacenamiento pequeño.
+
+![alt text](imagenes/cache-memvstor.webp)
+
+La forma en la que los sistmeas operativos usan esta memoria es mas que nada como una especie axiliar en la que guardan datos que el SO utiliza con mucha frequencia. Esto lo hacen para que se pueda reducir el tiempo en el que acceden a los datos y de esta forma mejorar los tiempos de respuestas y la eficiencia del SO en general.
+
+En cuanto a los dispositivos de E/S SO puede guarda tambien las instrucciones mas comunes de los dispositivos, las instrucciones de los drivers, para guardar las paginas de memoria que mas se usan, etc.
+ Por ejemplo, si un programa necesita leer datos secuenciales de un archivo grande, el driver de E/S puede predecir que se solicitarán más bloques de datos a medida que el archivo se lee, por lo que carga los bloques en la caché para reducir los tiempos de acceso lo que optimiza bastante las operaciones de lectura y escritura en los SO.
+
 
