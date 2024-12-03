@@ -930,6 +930,68 @@ Otra forma de explicarlo puede ser a travez de un diagrama de flujo con en la im
 
 Normalmente este tipo de interrupciones pasan cuando el dispositivo de E/S termina una operación y emite la señal de interrupción para que el procesador sepa que el dispositivo de E/S termino. Esto es bueno para el procesador porque no tiene que estar esperando o escuchando activamente a que el E/S termine y así pueda seguir ejecutando instrucciones.
 
+**PSEUDOCODIGO**
+``` 
+Iniciar sistema:
+    Crear dispositivo USB con nombre "USB de ANGEL", ID 1, y memoria "SOY LA INFORMACION DE LECTURA".
+    Asignar a driverUSB.controladora la controladoraUSB.
+    Establecer driverUSB.operacion como -1.
+    Establecer controladoraUSB.ocupado como 1.
+    Establecer controladoraUSB.operacion como -1.
+    Asignar dispositivo USB a la controladora.
+
+    Inicializar tabla de estados con el dispositivo USB y estado 0.
+    
+Solicitud de lectura:
+    Si driverUSB.controladora.ocupado no es 0:
+        Mostrar "El dispositivo está ocupado. Esperando..."
+        Esperar hasta que controladoraUSB.ocupado sea 0.
+
+    Marcar que se va a hacer una operación de lectura:
+        driverUSB.operacion = 0
+        driverUSB.controladora.operacion = 0
+        tablaEstados.operacion = 0
+        controladoraUSB.ocupado = 1
+        tablaEstados.estado = 1
+
+    Simular lectura tres veces.
+    Copiar datos leídos a un buffer.
+
+    Generar interrupción:
+        Si tablaEstados.estado es 1:
+            Mostrar "Manejando interrupción para el dispositivo".
+            Dependiendo de la operación:
+                Si la operación es lectura:
+                    Simular atención de la interrupción de lectura.
+                Si la operación es escritura:
+                    Simular atención de la interrupción de escritura.
+            Cambiar estado a 0.
+            Mostrar "El dispositivo terminó de ejecutar las IRS".
+            
+    Marcar el dispositivo como libre.
+
+Solicitud de escritura:
+    Si controladoraUSB.ocupado no es 0:
+        Mostrar "El dispositivo está ocupado. Esperando..."
+        Esperar hasta que controladoraUSB.ocupado sea 0.
+
+    Marcar que se va a hacer una operación de escritura:
+        driverUSB.operacion = 1
+        driverUSB.controladora.operacion = 1
+        tablaEstados.operacion = 1
+        controladoraUSB.ocupado = 1
+
+    Simular escritura cinco veces.
+    Copiar nuevos datos a la memoria del USB.
+
+    Marcar el dispositivo como libre.
+
+Mostrar la información final del dispositivo:
+    Mostrar "El proceso terminó de usar el dispositivo".
+    Mostrar los datos finales que contiene el USB.
+    Terminar simulación.
+```
+
  #### **2. Escribe un programa que utilice el manejo de interrupciones en un sistema básico de simulación.**
 ```c
 #include <stdio.h>
