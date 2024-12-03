@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define tamanoMemoria 50
-#define procesosMaximos 5
+#define procesosMaximos 500
 #define numeroMarcos 5
 
 int contador = 0;
@@ -12,15 +12,13 @@ typedef struct Proceso
 {
     int id;
     int tamMemoria;
-    
 } Proceso;
 
 typedef struct Marco
 {
     int numMarco;
-    int libre; // 1 = true 0=  false
+    int libre;
     int procesoID;
-
 } Marco;
 
 Marco memoriaPrincipal[numeroMarcos];
@@ -33,18 +31,50 @@ void inicializar()
     {
         memoriaPrincipal[i].numMarco = i;
         memoriaPrincipal[i].libre = 1;
-
         memoriaSecundaria[i].numMarco = i;
         memoriaSecundaria[i].libre = 1;
-
     }
+}
+
+void intercambioFIFO()
+{
+    int procesoASwapear = memoriaPrincipal[0].procesoID;
+
+    if (procesoASwapear == 0)
+    {
+        printf("\nNo hay procesos para intercambiar.\n");
+        return;
+    }
+
+    for (int i = 0; i < numeroMarcos; i++)
+    {
+        if (memoriaSecundaria[i].libre)
+        {
+            memoriaSecundaria[i].procesoID = procesoASwapear;
+            memoriaSecundaria[i].libre = 0;
+            printf("\nProceso %d intercambiado a memoria secundaria (Marco %d).\n", procesoASwapear, memoriaSecundaria[i].numMarco);
+            break;
+        }
+    }
+
+    for (int i = 0; i < numeroMarcos - 1; i++)
+    {
+        memoriaPrincipal[i] = memoriaPrincipal[i + 1];
+        memoriaPrincipal[i].numMarco = i;
+    }
+
+    memoriaPrincipal[numeroMarcos - 1].libre = 1;
+    memoriaPrincipal[numeroMarcos - 1].procesoID = 0;
+    memoriaPrincipal[numeroMarcos - 1].numMarco = numeroMarcos - 1;
+
+    printf("\nMemoria principal ajustada tras el intercambio.\n");
 }
 
 void asignarProceso()
 {
-    if (contador > procesosMaximos)
+    if (contador >= procesosMaximos)
     {
-        printf("\nError: NO se puede asignar más procesos a la memoria. Iniciando intercambio(Swapping) de procesos por FIFO..... \n");
+        printf("\nError: No se pueden asignar más procesos a la memoria. Iniciando intercambio (Swapping) de procesos por FIFO...\n");
     }
     else
     {
@@ -52,57 +82,66 @@ void asignarProceso()
         {
             if (memoriaPrincipal[i].libre == 1)
             {
-                memoriaPrincipal[i].procesoID = procesos[contador-1].id;
-                //memoriaPrincipal[i].paginaID = procesos[contador-1].Pagina.numPagina;
-                memoriaPrincipal[i].libre = 0; // ya no esta libre la memoria
-
-                printf("\nSe cargo el proceso proceso %d en en el marco %d", memoriaPrincipal[i].procesoID, memoriaPrincipal[i].numMarco);
+                memoriaPrincipal[i].procesoID = procesos[contador].id;
+                memoriaPrincipal[i].libre = 0;
+                printf("\nSe cargó el proceso %d en el marco %d.\n", memoriaPrincipal[i].procesoID, memoriaPrincipal[i].numMarco);
                 return;
             }
         }
+        printf("\nMemoria RAM llena. Iniciando proceso de swapping...\n");
+        intercambioFIFO();
+        asignarProceso();
     }
 }
 
 void creaProceso()
 {
+    if (contador >= procesosMaximos)
+    {
+        printf("\nNo se pueden crear más procesos. Límite alcanzado.\n");
+        return;
+    }
 
     Proceso nuevo;
     nuevo.id = contador + 1;
     nuevo.tamMemoria = rand() % 101 + 10;
-    nuevo.prioridad = rand() % 5 + 1;
 
     procesos[contador] = nuevo;
-    printf("Proceso creado.");
-    contador++;
+    printf("\nProceso creado: ID %d, Tamaño %d.\n", nuevo.id, nuevo.tamMemoria);
     asignarProceso();
-    
-    
-    
+    contador++;
 }
 
 void mostrarMemoria(int control)
 {
     if (control == 1)
     {
-        for (int i = 0; i < numeroMarcos;i++)
+        printf("\nMemoria Principal:\n");
+        for (int i = 0; i < numeroMarcos; i++)
         {
-            if(memoriaPrincipal[i].libre){
-                printf("\nMarco %d: Libre", memoriaPrincipal[i].numMarco);
-            }else{
-                printf("\nMarco %d: Proceso %d", memoriaPrincipal[i].numMarco, memoriaPrincipal[i].procesoID, memoriaPrincipal[i].paginaID);
+            if (memoriaPrincipal[i].libre)
+            {
+                printf("Marco %d: Libre\n", memoriaPrincipal[i].numMarco);
             }
-            
+            else
+            {
+                printf("Marco %d: Proceso %d\n", memoriaPrincipal[i].numMarco, memoriaPrincipal[i].procesoID);
+            }
         }
-    }else{
-
-        for (int i = 0; i < numeroMarcos;i++)
+    }
+    else
+    {
+        printf("\nMemoria Secundaria:\n");
+        for (int i = 0; i < numeroMarcos; i++)
         {
-
-            if(memoriaSecundaria[i].libre){
-                printf("\nMarco %d: Libre", memoriaPrincipal[i].numMarco);
-            }else{
-                printf("\nMarco %d: Proceso %d", memoriaSecundaria[i].numMarco, memoriaSecundaria[i].procesoID, memoriaSecundaria->paginaID);
-            }  
+            if (memoriaSecundaria[i].libre)
+            {
+                printf("Marco %d: Libre\n", memoriaSecundaria[i].numMarco);
+            }
+            else
+            {
+                printf("Marco %d: Proceso %d\n", memoriaSecundaria[i].numMarco, memoriaSecundaria[i].procesoID);
+            }
         }
     }
 }
@@ -120,9 +159,8 @@ int main()
         printf("1.- Generar proceso\n");
         printf("2.- Mostrar estado de memoria principal\n");
         printf("3.- Mostrar estado de memoria secundaria\n");
-        printf("4.- Traer Proceso a memoria principal (swap-IN)\n");
-        printf("5.- Salir\n");
-        printf("Eleccion: ");
+        printf("4.- Salir\n");
+        printf("Elección: ");
         scanf("%d", &eleccion);
 
         switch (eleccion)
@@ -137,9 +175,6 @@ int main()
             mostrarMemoria(0);
             break;
         case 4:
-            mostrarMemoria(0);
-            break;
-        case 5:
             printf("Saliendo...\n");
             break;
         default:
