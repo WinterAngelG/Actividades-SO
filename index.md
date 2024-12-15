@@ -1685,25 +1685,82 @@ Por ejemplo, si un programa necesita leer datos secuenciales de un archivo grand
 **Ejecute los siguientes comandos y anote sus observaciones:**
 
 - `lsblk`: Enumera los dispositivos de bloque.
-
-![alt text](image.png)
+```
+angel@angel-virtualbox:~$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0    7:0    0     4K  1 loop /snap/bare/5
+loop1    7:1    0  74.3M  1 loop /snap/core22/1564
+loop2    7:2    0  73.9M  1 loop /snap/core22/1722
+loop3    7:3    0 269.8M  1 loop /snap/firefox/4793
+loop4    7:4    0  38.8M  1 loop /snap/snapd/21759
+loop5    7:5    0 505.1M  1 loop /snap/gnome-42-2204/176
+loop6    7:6    0  10.7M  1 loop /snap/firmware-updater/127
+loop7    7:7    0  11.1M  1 loop /snap/firmware-updater/147
+loop8    7:8    0  91.7M  1 loop /snap/gtk-common-themes/1535
+loop9    7:9    0  44.3M  1 loop /snap/snapd/23258
+sda      8:0    0    25G  0 disk 
+└─sda1   8:1    0    25G  0 part /
+sr0     11:0    1  1024M  0 rom
+```
 
 Este comando lo que me mostró fueron los dispositivos de bloque de mi equipo. Por ejemplo me mostro el disco principal de mi maquina con el nombre de sda y tambien muestra el tamaño que en este caso es de 25GB porque es el de la maquina virtual.
 - `lsusb`: Lista los dispositivos conectados a los puertos USB.
-![alt text](image-1.png)
+```
+angel@angel-virtualbox:~$ lsusb
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 002 Device 002: ID 80ee:0021 VirtualBox USB Tablet
+```
 
 Aqui se supone que este comando muestra los dispositivos USB en mi computadora pero como estoy en una VM lo que me muestra son los controladores de USB de la VM por asi decirlo. Ya que intente conectar una usb la cual si me la reconocia la maquina principal windows pero en la VM de linux no me la reconoce y tampoco el comando de lsusb me lo muestra
 
 - `lspci`: Muestra los dispositivos conectados al bus PCI.
-
-![alt text](image-2.png)
+```
+angel@angel-virtualbox:~$ lspci
+00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
+00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
+00:01.1 IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 01)
+00:02.0 VGA compatible controller: VMware SVGA II Adapter
+00:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)
+00:04.0 System peripheral: InnoTek Systemberatung GmbH VirtualBox Guest Service
+00:05.0 Multimedia audio controller: Intel Corporation 82801AA AC'97 Audio Controller (rev 01)
+00:06.0 USB controller: Apple Inc. KeyLargo/Intrepid USB
+00:07.0 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 08)
+00:0b.0 USB controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller
+00:0d.0 SATA controller: Intel Corporation 82801HM/HEM (ICH8M/ICH8M-E) SATA Controller [AHCI mode] (rev 02)
+```
 
 Este comando es curioso ya que como es una VM los dispositivos de PCI tambien son virtuales. Al parecer los primeros numeros muestran el numero del bus
 de esos dispositivos luego muestra el tipo de dispositivo y luego el fabricante pero como son virtuales me muestra muchos dispositivos de INTEL aunque yo en mi maquina verdadera tengo Ryzen 
 
 - `dmesg | grep usb`: Muestra los mensajes del kernel relacionados con dispositivos USB.
-
-![alt text](image-3.png)
+```
+angel@angel-virtualbox:~$ dmesg | grep usb
+dmesg: fallo al leer el «buffer» del núcleo: Operación no permitida
+angel@angel-virtualbox:~$ sudo dmesg | grep usb
+[    0.758060] usbcore: registered new interface driver usbfs
+[    0.758070] usbcore: registered new interface driver hub
+[    0.758078] usbcore: registered new device driver usb
+[    0.932044] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.08
+[    0.932050] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.932053] usb usb1: Product: EHCI Host Controller
+[    0.932055] usb usb1: Manufacturer: Linux 6.8.0-41-generic ehci_hcd
+[    0.932058] usb usb1: SerialNumber: 0000:00:0b.0
+[    1.005084] usb usb2: New USB device found, idVendor=1d6b, idProduct=0001, bcdDevice= 6.08
+[    1.005103] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.005106] usb usb2: Product: OHCI PCI host controller
+[    1.005109] usb usb2: Manufacturer: Linux 6.8.0-41-generic ohci_hcd
+[    1.005112] usb usb2: SerialNumber: 0000:00:06.0
+[    1.338109] usb 2-1: new full-speed USB device number 2 using ohci-pci
+[    1.663815] usb 2-1: New USB device found, idVendor=80ee, idProduct=0021, bcdDevice= 1.00
+[    1.663825] usb 2-1: New USB device strings: Mfr=1, Product=3, SerialNumber=0
+[    1.663828] usb 2-1: Product: USB Tablet
+[    1.663830] usb 2-1: Manufacturer: VirtualBox
+[    2.824612] usbcore: registered new interface driver usbhid
+[    2.824618] usbhid: USB HID core driver
+[    2.854947] input: VirtualBox USB Tablet as /devices/pci0000:00/0000:00:06.0/usb2/2-1/2-1:1.0/0003:80EE:0021.0001/input/input6
+[    2.855214] hid-generic 0003:80EE:0021.0001: input,hidraw0: USB HID v1.10 Mouse [VirtualBox USB Tablet] on usb-0000:00:06.0-1/input0
+```
 
 En este comando al principio no me dejaba ejecutarlo como todos los demas 
 porque este necesita darle permisos de superusuario por lo que lo ejecute
@@ -1727,13 +1784,97 @@ por lo que realmente el unico dispositivo de bloque real que si me muestra es el
 ### **Actividad 2: Verificar dispositivos de almacenamiento**
 
 1. Use el comando `fdisk -l` para listar todos los discos y particiones.
-![alt text](image-4.png)
+```
+angel@angel-virtualbox:~$ sudo fdisk -l
+[sudo] contraseña para angel: 
+Disco /dev/loop0: 4 KiB, 4096 bytes, 8 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
 
+
+Disco /dev/loop1: 74.27 MiB, 77881344 bytes, 152112 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop2: 73.87 MiB, 77459456 bytes, 151288 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop3: 269.77 MiB, 282873856 bytes, 552488 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop4: 38.83 MiB, 40714240 bytes, 79520 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop5: 505.09 MiB, 529625088 bytes, 1034424 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop6: 10.72 MiB, 11239424 bytes, 21952 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop7: 11.11 MiB, 11649024 bytes, 22752 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/sda: 25 GiB, 26843545600 bytes, 52428800 sectores
+Disk model: VBOX HARDDISK   
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+Tipo de etiqueta de disco: dos
+Identificador del disco: 0x1645d00a
+
+Dispositivo Inicio Comienzo    Final Sectores Tamaño Id Tipo
+/dev/sda1   *          2048 52420094 52418047    25G 83 Linux
+
+
+Disco /dev/loop8: 91.69 MiB, 96141312 bytes, 187776 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+Disco /dev/loop9: 44.3 MiB, 46448640 bytes, 90720 sectores
+Unidades: sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+```
 2. Utilice `blkid` para ver los identificadores UUID y los tipos de sistema de archivos.
-![alt text](image-5.png)
+```
+angel@angel-virtualbox:~$ blkid
+/dev/sda1: LABEL="lubuntu_2404" UUID="5608cbb2-a030-4d70-b390-7280d43c2b42" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="1645d00a-01"
+```
 
 3. Use `df -h` para listar los dispositivos montados y su espacio disponible.
-![alt text](image-6.png)
+
+```
+angel@angel-virtualbox:~$ df -h
+S.ficheros     Tamaño Usados  Disp Uso% Montado en
+tmpfs            197M   1.3M  196M   1% /run
+/dev/sda1         25G   8.0G   16G  35% /
+tmpfs            985M      0  985M   0% /dev/shm
+tmpfs            5.0M   8.0K  5.0M   1% /run/lock
+tmpfs            197M   124K  197M   1% /run/user/1000
+```
 
 **Conteste:**
 
@@ -1743,53 +1884,352 @@ por lo que realmente el unico dispositivo de bloque real que si me muestra es el
 
 - **¿Qué particiones están montadas actualmente?**
 
-    **RESPUESTA:** Según el comando df -h la partición montada es /dev/sda1 que está montada en la raíz (/) del sistema. También hay particiones temporales (tmpfs) que se usan para cosas como la memoria compartida (/dev/shm) y el sistema de archivos temporal en /run y /run/user/1000.
+    **RESPUESTA:** Según el comando df -h la partición montada es /dev/sda1 que está montada en la raíz del sistema. También hay particiones temporales que se usan para cosas como la memoria compartida y el sistema de archivos temporal.
 
 - **¿Qué tipo de sistemas de archivos se usan en las particiones?**
 
-    **RESPUESTA:** En la partición principal /dev/sda1 el sistema de archivos es ext4, como se puede ver en el comando blkid. Las particiones temporales (tmpfs) usan un sistema de archivos en memoria que no es persistente y está diseñado para datos temporales.
+    **RESPUESTA:** En la partición principal /dev/sda1 el sistema de archivos es de tipo ext4.
 
 ### **Actividad 3: Explorar dispositivos de entradas**
 1. Ejecute `cat /proc/bus/input/devices` para listar los dispositivos de entrada.
+```
+angel@angel-virtualbox:~$ cat /proc/bus/input/devices
+I: Bus=0019 Vendor=0000 Product=0001 Version=0000
+N: Name="Power Button"
+P: Phys=LNXPWRBN/button/input0
+S: Sysfs=/devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+U: Uniq=
+H: Handlers=kbd event0 
+B: PROP=0
+B: EV=3
+B: KEY=8000 10000000000000 0
+
+I: Bus=0019 Vendor=0000 Product=0003 Version=0000
+N: Name="Sleep Button"
+P: Phys=LNXSLPBN/button/input0
+S: Sysfs=/devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+U: Uniq=
+H: Handlers=kbd event1 
+B: PROP=0
+B: EV=3
+B: KEY=4000 0 0
+
+I: Bus=0011 Vendor=0001 Product=0001 Version=ab41
+N: Name="AT Translated Set 2 keyboard"
+P: Phys=isa0060/serio0/input0
+S: Sysfs=/devices/platform/i8042/serio0/input/input2
+U: Uniq=
+H: Handlers=sysrq kbd event2 leds 
+B: PROP=0
+B: EV=120013
+B: KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
+B: MSC=10
+B: LED=7
+
+I: Bus=0019 Vendor=0000 Product=0006 Version=0000
+N: Name="Video Bus"
+P: Phys=LNXVIDEO/video/input0
+S: Sysfs=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/LNXVIDEO:00/input/input4
+U: Uniq=
+H: Handlers=kbd event3 
+B: PROP=0
+B: EV=3
+B: KEY=3e000b00000000 0 0 0
+
+I: Bus=0003 Vendor=80ee Product=0021 Version=0110
+N: Name="VirtualBox USB Tablet"
+P: Phys=usb-0000:00:06.0-1/input0
+S: Sysfs=/devices/pci0000:00/0000:00:06.0/usb2/2-1/2-1:1.0/0003:80EE:0021.0001/input/input6
+U: Uniq=
+H: Handlers=mouse0 event4 js0 
+B: PROP=0
+B: EV=1f
+B: KEY=1f0000 0 0 0 0
+B: REL=1940
+B: ABS=3
+B: MSC=10
+
+I: Bus=0011 Vendor=0002 Product=0006 Version=0000
+N: Name="ImExPS/2 Generic Explorer Mouse"
+P: Phys=isa0060/serio1/input0
+S: Sysfs=/devices/platform/i8042/serio1/input/input5
+U: Uniq=
+H: Handlers=mouse1 event5 
+B: PROP=1
+B: EV=7
+B: KEY=1f0000 0 0 0 0
+B: REL=143
+
+I: Bus=0001 Vendor=80ee Product=cafe Version=0000
+N: Name="VirtualBox mouse integration"
+P: Phys=
+S: Sysfs=/devices/pci0000:00/0000:00:04.0/input/input7
+U: Uniq=
+H: Handlers=mouse2 event6 js1 
+B: PROP=0
+B: EV=b
+B: KEY=10000 0 0 0 0
+B: ABS=3
+```
+
 2. Use `evtest` para monitorear eventos de dispositivos de entrada (requiere permisos de superusuario).
+```
+angel@angel-virtualbox:~$ sudo evtest
+[sudo] contraseña para angel: 
+sudo: evtest: orden no encontrada
+angel@angel-virtualbox:~$ 
+```
 3. Investigue los siguientes dispositivos:
 * Teclado
 * Mouse
 * Controladores USB adicionales
 4. Conteste:
-* ¿Qué eventos genera cada dispositivo al interactuar con ellos?
-* ¿Cómo se identifican los dispositivos en `/proc/bus/input/devices`?
+* **¿Qué eventos genera cada dispositivo al interactuar con ellos?**
+
+    **RESPUESTA:** Lo que noté al revisar /proc/bus/input/devices es que cada dispositivo tiene ciertos eventos que maneja. Por ejemplo, el teclado genera eventos relacionados con las teclas que presionas y hasta con las luces que tiene, como las de Bloq Mayús. El mouse también tiene sus eventos, que son para registrar movimientos y clics. Algo curioso es que el mouse aparece más de una vez: uno es el genérico del sistema y el otro es la integración de VirtualBox, que también puede manejar movimientos y posición absoluta. Luego están los botones de encendido y suspensión, que solo generan eventos cuando los activas. Quise usar evtest para ver los eventos en tiempo real, pero por algun motivo no me lo reconocia el comando el sistema.
+* **¿Cómo se identifican los dispositivos en `/proc/bus/input/devices`?**
+
+    **RESPUESTA:** Los dispositivos se identifican con varias cosas que te ayudan a entender qué es cada uno. Primero, está el tipo de conexión, como si es interno o USB. También tienen un nombre que describe qué son, como "AT Translated Set 2 keyboard" para el teclado. Luego, vienen con un identificador del fabricante y modelo, y algo llamado "Handlers", que básicamente es lo que maneja los eventos del dispositivo, por ejemplo, kbd para el teclado o mouse para el ratón. Otra cosa interesante es que te dice cómo están conectados físicamente al sistema, aunque en mi caso, como es una máquina virtual, muchas cosas son emuladas.
 
 ### **Actividad 4: Examinar dispositivos de salida**
 
 
 
 1. Use `xrandr` para listar las pantallas conectadas y sus resoluciones.
+```
+angel@angel-virtualbox:~$ xrandr
+Screen 0: minimum 1 x 1, current 1280 x 800, maximum 16384 x 16384
+Virtual1 connected primary 1280x800+0+0 (normal left inverted right x axis y axis) 0mm x 0mm
+   1280x800      60.00*+  59.81  
+   1920x1440     60.00  
+   1856x1392     60.00  
+   1792x1344     60.00  
+   1920x1200     59.88  
+   1920x1080     59.96  
+   1600x1200     60.00  
+   1680x1050     59.95  
+   1400x1050     59.98  
+   1280x1024     60.02  
+   1440x900      59.89  
+   1280x960      60.00  
+   1360x768      60.02  
+   1152x864      75.00  
+   1280x768      59.87  
+   1280x720      59.86  
+   1024x768      60.00  
+   800x600       60.32  
+   640x480       59.94  
+Virtual2 disconnected (normal left inverted right x axis y axis)
+Virtual3 disconnected (normal left inverted right x axis y axis)
+Virtual4 disconnected (normal left inverted right x axis y axis)
+Virtual5 disconnected (normal left inverted right x axis y axis)
+Virtual6 disconnected (normal left inverted right x axis y axis)
+Virtual7 disconnected (normal left inverted right x axis y axis)
+Virtual8 disconnected (normal left inverted right x axis y axis)
+```
+
 2. Ejecute `aplay -l` para listar las tarjetas de sonido disponibles.
+```
+angel@angel-virtualbox:~$ aplay -l
+**** Lista de PLAYBACK dispositivos hardware ****
+tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 82801AA-ICH]
+  Subdispositivos: 1/1
+  Subdispositivo #0: subdevice #0
+```
 3. Use `lsof /dev/snd/*` para ver qué procesos están utilizando la tarjeta de sonido.
+```
+angel@angel-virtualbox:~$ lsof /dev/snd/*
+COMMAND    PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+pipewire  1185 angel   59u   CHR  116,1      0t0  412 /dev/snd/seq
+pipewire  1185 angel   60u   CHR  116,1      0t0  412 /dev/snd/seq
+wireplumb 1188 angel   36u   CHR  116,5      0t0  665 /dev/snd/controlC0
+```
 4. Conteste:
-* ¿Qué salidas de video están disponibles en su sistema?
-* ¿Qué dispositivos de sonido se detectaron?
-* ¿Qué procesos están usando la tarjeta de sonido?
+* **¿Qué salidas de video están disponibles en su sistema?**
+
+   **RESPUESTA:** Segun lo que me mostro el comando como tal solo tengo una salida de video activa que es la de Virtual1 la cual aparece como conectada y tiene una resolución de 1280x800 que es la resolución actual. Luego muestra tabmien como las resoluciones disponibles para esa salida de video y tambien muestra mas salida con el nombre de virtual2, virtual3 y asi pero que aparecen que estan desconectadas.
+
+* **¿Qué dispositivos de sonido se detectaron?**
+
+    **RESPUESTA:** El comando aplay -l mostró que solo hay una tarjeta de sonido disponible que era la de la tarjeta Intel 82801AA-ICH.
+
+* **¿Qué procesos están usando la tarjeta de sonido?**
+
+    **RESPUESTA:** Cuando ejecute el comando de lsof /dev/snd/* aparecian dos procesos utilizando la tarjeta de sonido. El primero es pipewire con el PID 1185 y el otro wireplumb con el PID 1188.
 
 ### **Actividad 5: Crear un script de resumen**
 
 1. Cree un archivo llamado `dispositivos.sh` y agregue el siguiente contenido: ```bash #!/bin/bash echo "Dispositivos de bloque:" lsblk echo "Dispositivos USB:" lsusb echo "Dispositivos PCI:" lspci echo "Dispositivos de entrada:" cat /proc/bus/input/devices echo "Salidas de video:" xrandr echo "Tarjetas de sonido:" aplay -l ```
+![alt text](imagenes/script.png)
 2. Ejecute el script usando `bash dispositivos.sh`.
+![alt text](imagenes/dispositivos.sh.png)
 3. Modifique el script para guardar la salida en un archivo llamado `resumendispositivos.txt`.
-4. Conteste:
-* ¿Qué ventajas tiene usar un script para recopilar esta información?
-* ¿Qué cambios realizaría para personalizar el script?
+![alt text](imagenes/resumendispositivos.png)
 
+**Contenido del archivo txt:**
+```
+Dispositivos de bloque:
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0    7:0    0     4K  1 loop /snap/bare/5
+loop1    7:1    0  74.3M  1 loop /snap/core22/1564
+loop2    7:2    0  73.9M  1 loop /snap/core22/1722
+loop3    7:3    0 269.8M  1 loop /snap/firefox/4793
+loop4    7:4    0  38.8M  1 loop /snap/snapd/21759
+loop5    7:5    0 505.1M  1 loop /snap/gnome-42-2204/176
+loop6    7:6    0  10.7M  1 loop /snap/firmware-updater/127
+loop7    7:7    0  11.1M  1 loop /snap/firmware-updater/147
+loop8    7:8    0  91.7M  1 loop /snap/gtk-common-themes/1535
+loop9    7:9    0  44.3M  1 loop /snap/snapd/23258
+sda      8:0    0    25G  0 disk 
+└─sda1   8:1    0    25G  0 part /
+sr0     11:0    1  1024M  0 rom  
+Dispositivos USB:
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 002 Device 002: ID 80ee:0021 VirtualBox USB Tablet
+Dispositivos PCI:
+00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
+00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
+00:01.1 IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 01)
+00:02.0 VGA compatible controller: VMware SVGA II Adapter
+00:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)
+00:04.0 System peripheral: InnoTek Systemberatung GmbH VirtualBox Guest Service
+00:05.0 Multimedia audio controller: Intel Corporation 82801AA AC'97 Audio Controller (rev 01)
+00:06.0 USB controller: Apple Inc. KeyLargo/Intrepid USB
+00:07.0 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 08)
+00:0b.0 USB controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller
+00:0d.0 SATA controller: Intel Corporation 82801HM/HEM (ICH8M/ICH8M-E) SATA Controller [AHCI mode] (rev 02)
+Dispositivos de entrada:
+I: Bus=0019 Vendor=0000 Product=0001 Version=0000
+N: Name="Power Button"
+P: Phys=LNXPWRBN/button/input0
+S: Sysfs=/devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+U: Uniq=
+H: Handlers=kbd event0 
+B: PROP=0
+B: EV=3
+B: KEY=8000 10000000000000 0
+
+I: Bus=0019 Vendor=0000 Product=0003 Version=0000
+N: Name="Sleep Button"
+P: Phys=LNXSLPBN/button/input0
+S: Sysfs=/devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+U: Uniq=
+H: Handlers=kbd event1 
+B: PROP=0
+B: EV=3
+B: KEY=4000 0 0
+
+I: Bus=0011 Vendor=0001 Product=0001 Version=ab41
+N: Name="AT Translated Set 2 keyboard"
+P: Phys=isa0060/serio0/input0
+S: Sysfs=/devices/platform/i8042/serio0/input/input2
+U: Uniq=
+H: Handlers=sysrq kbd event2 leds 
+B: PROP=0
+B: EV=120013
+B: KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
+B: MSC=10
+B: LED=7
+
+I: Bus=0019 Vendor=0000 Product=0006 Version=0000
+N: Name="Video Bus"
+P: Phys=LNXVIDEO/video/input0
+S: Sysfs=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/LNXVIDEO:00/input/input4
+U: Uniq=
+H: Handlers=kbd event3 
+B: PROP=0
+B: EV=3
+B: KEY=3e000b00000000 0 0 0
+
+I: Bus=0003 Vendor=80ee Product=0021 Version=0110
+N: Name="VirtualBox USB Tablet"
+P: Phys=usb-0000:00:06.0-1/input0
+S: Sysfs=/devices/pci0000:00/0000:00:06.0/usb2/2-1/2-1:1.0/0003:80EE:0021.0001/input/input6
+U: Uniq=
+H: Handlers=mouse0 event4 js0 
+B: PROP=0
+B: EV=1f
+B: KEY=1f0000 0 0 0 0
+B: REL=1940
+B: ABS=3
+B: MSC=10
+
+I: Bus=0011 Vendor=0002 Product=0006 Version=0000
+N: Name="ImExPS/2 Generic Explorer Mouse"
+P: Phys=isa0060/serio1/input0
+S: Sysfs=/devices/platform/i8042/serio1/input/input5
+U: Uniq=
+H: Handlers=mouse1 event5 
+B: PROP=1
+B: EV=7
+B: KEY=1f0000 0 0 0 0
+B: REL=143
+
+I: Bus=0001 Vendor=80ee Product=cafe Version=0000
+N: Name="VirtualBox mouse integration"
+P: Phys=
+S: Sysfs=/devices/pci0000:00/0000:00:04.0/input/input7
+U: Uniq=
+H: Handlers=mouse2 event6 js1 
+B: PROP=0
+B: EV=b
+B: KEY=10000 0 0 0 0
+B: ABS=3
+
+Salidas de video:
+Screen 0: minimum 1 x 1, current 1280 x 800, maximum 16384 x 16384
+Virtual1 connected primary 1280x800+0+0 (normal left inverted right x axis y axis) 0mm x 0mm
+   1280x800      60.00*+  59.81  
+   1920x1440     60.00  
+   1856x1392     60.00  
+   1792x1344     60.00  
+   1920x1200     59.88  
+   1920x1080     59.96  
+   1600x1200     60.00  
+   1680x1050     59.95  
+   1400x1050     59.98  
+   1280x1024     60.02  
+   1440x900      59.89  
+   1280x960      60.00  
+   1360x768      60.02  
+   1152x864      75.00  
+   1280x768      59.87  
+   1280x720      59.86  
+   1024x768      60.00  
+   800x600       60.32  
+   640x480       59.94  
+Virtual2 disconnected (normal left inverted right x axis y axis)
+Virtual3 disconnected (normal left inverted right x axis y axis)
+Virtual4 disconnected (normal left inverted right x axis y axis)
+Virtual5 disconnected (normal left inverted right x axis y axis)
+Virtual6 disconnected (normal left inverted right x axis y axis)
+Virtual7 disconnected (normal left inverted right x axis y axis)
+Virtual8 disconnected (normal left inverted right x axis y axis)
+Tarjetas de sonido:
+**** Lista de PLAYBACK dispositivos hardware ****
+tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 82801AA-ICH]
+  Subdispositivos: 1/1
+  Subdispositivo #0: subdevice #0
+```
+
+4. Conteste:
+* **¿Qué ventajas tiene usar un script para recopilar esta información?**
+
+**RESPUESTA:** Principalmente el tiempo que te ahorras porque con el script puedes ejecutar todos esos comandos solamente ejectuando el archivo dispositivos.sh y ya no tienes que estar ejectuando cada comando individualmente cada vez que se quiere hacer la recopilacion de los datos. 
+
+* **¿Qué cambios realizaría para personalizar el script?**
+
+**RESPUESTA:** 
 
 
 ### **Actividad 6: Reflexión y discusión**
 
 1. Reflexione sobre lo aprendido y discuta en equipo:
 
-* ¿Qué comando encontró más útil y por qué?
-* ¿Qué tan importante es conocer los dispositivos conectados al sistema?
-* ¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?
+* **¿Qué comando encontró más útil y por qué?**
+* **¿Qué tan importante es conocer los dispositivos conectados al sistema?**
+* **¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?**
 
 
 ## **Comandos de Entrada y Salida, Discos y Archivos**
