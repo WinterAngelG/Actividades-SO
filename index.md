@@ -1685,7 +1685,7 @@ Por ejemplo, si un programa necesita leer datos secuenciales de un archivo grand
 **Ejecute los siguientes comandos y anote sus observaciones:**
 
 - `lsblk`: Enumera los dispositivos de bloque.
-```
+``` bash
 angel@angel-virtualbox:~$ lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 loop0    7:0    0     4K  1 loop /snap/bare/5
@@ -1705,7 +1705,7 @@ sr0     11:0    1  1024M  0 rom
 
 Este comando lo que me mostró fueron los dispositivos de bloque de mi equipo. Por ejemplo me mostro el disco principal de mi maquina con el nombre de sda y tambien muestra el tamaño que en este caso es de 25GB porque es el de la maquina virtual.
 - `lsusb`: Lista los dispositivos conectados a los puertos USB.
-```
+``` bash
 angel@angel-virtualbox:~$ lsusb
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
@@ -1715,7 +1715,7 @@ Bus 002 Device 002: ID 80ee:0021 VirtualBox USB Tablet
 Aqui se supone que este comando muestra los dispositivos USB en mi computadora pero como estoy en una VM lo que me muestra son los controladores de USB de la VM por asi decirlo. Ya que intente conectar una usb la cual si me la reconocia la maquina principal windows pero en la VM de linux no me la reconoce y tampoco el comando de lsusb me lo muestra
 
 - `lspci`: Muestra los dispositivos conectados al bus PCI.
-```
+``` bash
 angel@angel-virtualbox:~$ lspci
 00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
 00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
@@ -1734,7 +1734,7 @@ Este comando es curioso ya que como es una VM los dispositivos de PCI tambien so
 de esos dispositivos luego muestra el tipo de dispositivo y luego el fabricante pero como son virtuales me muestra muchos dispositivos de INTEL aunque yo en mi maquina verdadera tengo Ryzen 
 
 - `dmesg | grep usb`: Muestra los mensajes del kernel relacionados con dispositivos USB.
-```
+```bash
 angel@angel-virtualbox:~$ dmesg | grep usb
 dmesg: fallo al leer el «buffer» del núcleo: Operación no permitida
 angel@angel-virtualbox:~$ sudo dmesg | grep usb
@@ -1784,7 +1784,7 @@ por lo que realmente el unico dispositivo de bloque real que si me muestra es el
 ### **Actividad 2: Verificar dispositivos de almacenamiento**
 
 1. Use el comando `fdisk -l` para listar todos los discos y particiones.
-```
+```bash
 angel@angel-virtualbox:~$ sudo fdisk -l
 [sudo] contraseña para angel: 
 Disco /dev/loop0: 4 KiB, 4096 bytes, 8 sectores
@@ -1859,14 +1859,14 @@ Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
 Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
 ```
 2. Utilice `blkid` para ver los identificadores UUID y los tipos de sistema de archivos.
-```
+```bash
 angel@angel-virtualbox:~$ blkid
 /dev/sda1: LABEL="lubuntu_2404" UUID="5608cbb2-a030-4d70-b390-7280d43c2b42" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="1645d00a-01"
 ```
 
 3. Use `df -h` para listar los dispositivos montados y su espacio disponible.
 
-```
+```bash
 angel@angel-virtualbox:~$ df -h
 S.ficheros     Tamaño Usados  Disp Uso% Montado en
 tmpfs            197M   1.3M  196M   1% /run
@@ -1892,7 +1892,7 @@ tmpfs            197M   124K  197M   1% /run/user/1000
 
 ### **Actividad 3: Explorar dispositivos de entradas**
 1. Ejecute `cat /proc/bus/input/devices` para listar los dispositivos de entrada.
-```
+```bash
 angel@angel-virtualbox:~$ cat /proc/bus/input/devices
 I: Bus=0019 Vendor=0000 Product=0001 Version=0000
 N: Name="Power Button"
@@ -1973,7 +1973,7 @@ B: ABS=3
 ```
 
 2. Use `evtest` para monitorear eventos de dispositivos de entrada (requiere permisos de superusuario).
-```
+```bash
 angel@angel-virtualbox:~$ sudo evtest
 [sudo] contraseña para angel: 
 sudo: evtest: orden no encontrada
@@ -1996,7 +1996,7 @@ angel@angel-virtualbox:~$
 
 
 1. Use `xrandr` para listar las pantallas conectadas y sus resoluciones.
-```
+```bash
 angel@angel-virtualbox:~$ xrandr
 Screen 0: minimum 1 x 1, current 1280 x 800, maximum 16384 x 16384
 Virtual1 connected primary 1280x800+0+0 (normal left inverted right x axis y axis) 0mm x 0mm
@@ -2029,7 +2029,7 @@ Virtual8 disconnected (normal left inverted right x axis y axis)
 ```
 
 2. Ejecute `aplay -l` para listar las tarjetas de sonido disponibles.
-```
+``` bash
 angel@angel-virtualbox:~$ aplay -l
 **** Lista de PLAYBACK dispositivos hardware ****
 tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 82801AA-ICH]
@@ -2037,7 +2037,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
   Subdispositivo #0: subdevice #0
 ```
 3. Use `lsof /dev/snd/*` para ver qué procesos están utilizando la tarjeta de sonido.
-```
+``` bash
 angel@angel-virtualbox:~$ lsof /dev/snd/*
 COMMAND    PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 pipewire  1185 angel   59u   CHR  116,1      0t0  412 /dev/snd/seq
@@ -2067,7 +2067,7 @@ wireplumb 1188 angel   36u   CHR  116,5      0t0  665 /dev/snd/controlC0
 ![alt text](imagenes/resumendispositivos.png)
 
 **Contenido del archivo txt:**
-```
+``` bash
 Dispositivos de bloque:
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 loop0    7:0    0     4K  1 loop /snap/bare/5
@@ -2228,22 +2228,182 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 1. Reflexione sobre lo aprendido y discuta en equipo:
 
 * **¿Qué comando encontró más útil y por qué?**
+
+**RESPUESTA:** 
 * **¿Qué tan importante es conocer los dispositivos conectados al sistema?**
+
+**RESPUESTA:** 
+
 * **¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?**
+
+**RESPUESTA:** 
 
 
 ## **Comandos de Entrada y Salida, Discos y Archivos**
 
 ### **Ejercicio 1: Montar y Desmontar Discos**
+* Objetivo: Aprender a montar y desmontar un dispositivo externo.
+
+* Inserta una memoria USB en el sistema.
+
+* Encuentra el dispositivo usando el comando:
+    ``` 
+    lsblk
+    ```
+ 
+
+    ``` 
+    fdisk -l
+    ```
+* Monta la memoria USB en un directorio, por ejemplo, `/mnt/usb`: 
+    ```
+    sudo mount /dev/sdX1 /mnt/usb
+    ```
+
+* Verifica que esté montado correctamente: 
+    ```
+    df -h
+    ```
+
+* Copia un archivo desde tu directorio personal al dispositivo USB:  
+    ```
+    cp archivo.txt /mnt/usb/
+    ```
+
+* Desmonta la memoria USB: 
+    ```
+    sudo umount /mnt/usb
+    ```
+
 
 ### **Ejercicio 2: Redirección de Entrada y Salida**
+* **Objetivo**: Usar redirección para guardar la salida de comandos en archivos.
+
+* Lista los archivos de tu directorio actual y guarda el resultado en un archivo `listado.txt`:
+    ```
+    ls -l > listado.txt
+    ```
+
+* Muestra el contenido del archivo en la terminal:
+    ```
+    cat listado.txt
+    ```
+
+* Añade la fecha actual al final del archivo:
+    ```
+    date >> listado.txt
+    ```
+
+* Muestra todo el contenido del archivo nuevamente:
+    ```
+    cat listado.txt
+    ```
+
+---
 
 ### **Ejercicio 3: Copiar y Mover Archivos**
+* **Objetivo**: Practicar copiar y mover archivos y directorios.
+
+* Crea un archivo de texto llamado `archivo1.txt`:
+    ```
+    echo "Este es un archivo de prueba" > archivo1.txt
+    ```
+
+* Copia este archivo a otro directorio, por ejemplo, `/tmp`:
+    ```
+    cp archivo1.txt /tmp/
+    ```
+
+* Renombra el archivo copiado a `archivo2.txt` en `/tmp`:
+    ```
+    mv /tmp/archivo1.txt /tmp/archivo2.txt
+    ```
+
+* Mueve el archivo `archivo2.txt` de vuelta a tu directorio actual:
+    ```
+    mv /tmp/archivo2.txt .
+    ```
+
+---
 
 ### **Ejercicio 4: Comprimir y Descomprimir Archivos**
+* **Objetivo**: Aprender a trabajar con compresión de archivos.
+
+* Crea un directorio llamado `backup` y copia algunos archivos en él.
+
+* Comprime el directorio `backup` en un archivo `.tar.gz`:
+    ```
+    tar -czvf backup.tar.gz backup/
+    ```
+
+* Borra el directorio original y extrae el contenido del archivo comprimido:
+    ```
+    tar -xzvf backup.tar.gz
+    ```
+
+---
 
 ### **Ejercicio 5: Permisos y Propiedades de Archivos**
+* **Objetivo**: Aprender a modificar permisos y propietarios de archivos.
+
+* Crea un archivo llamado `privado.txt`:
+    ```
+    touch privado.txt
+    ```
+
+* Cambia los permisos del archivo para que solo el propietario pueda leer y escribir:
+    ```
+    chmod 600 privado.txt
+    ```
+
+* Cambia el propietario del archivo a otro usuario (si tienes privilegios):
+    ```
+    sudo chown usuario privado.txt
+    ```
+
+---
 
 ### **Ejercicio 6: Exploración de Dispositivos**
+* **Objetivo**: Identificar discos y particiones en el sistema.
+
+* Usa `lsblk` para listar los discos y particiones:
+    ```
+    lsblk
+    ```
+
+* Usa `du -sh` para ver el tamaño del contenido en un directorio de tu elección:
+    ```
+    du -sh /ruta/directorio
+    ```
+
+* Verifica el uso de disco con `df -h`:
+    ```
+    df -h
+    ```
+
+---
 
 ### **Ejercicio 7: Crear y Formatear Particiones**
+* **Objetivo**: Crear y formatear una nueva partición (Usar disco de práctica o máquina virtual).
+
+* Identifica un disco no particionado:
+    ```
+    sudo fdisk -l
+    ```
+
+* Usa `fdisk` para crear una nueva partición:
+    ```
+    sudo fdisk /dev/sdX
+    ```
+
+* Formatea la partición como `ext4`:
+    ```
+    sudo mkfs.ext4 /dev/sdX1
+    ```
+
+* Monta la partición en un directorio y prueba escribiendo archivos en ella:
+    ```
+    sudo mount /dev/sdX1 /mnt/nueva_particion
+    echo "Prueba de escritura" > /mnt/nueva_particion/test.txt
+    ```
+
