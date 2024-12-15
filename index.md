@@ -1685,27 +1685,69 @@ Por ejemplo, si un programa necesita leer datos secuenciales de un archivo grand
 **Ejecute los siguientes comandos y anote sus observaciones:**
 
 - `lsblk`: Enumera los dispositivos de bloque.
+
+![alt text](image.png)
+
+Este comando lo que me mostró fueron los dispositivos de bloque de mi equipo. Por ejemplo me mostro el disco principal de mi maquina con el nombre de sda y tambien muestra el tamaño que en este caso es de 25GB porque es el de la maquina virtual.
 - `lsusb`: Lista los dispositivos conectados a los puertos USB.
+![alt text](image-1.png)
+
+Aqui se supone que este comando muestra los dispositivos USB en mi computadora pero como estoy en una VM lo que me muestra son los controladores de USB de la VM por asi decirlo. Ya que intente conectar una usb la cual si me la reconocia la maquina principal windows pero en la VM de linux no me la reconoce y tampoco el comando de lsusb me lo muestra
+
 - `lspci`: Muestra los dispositivos conectados al bus PCI.
+
+![alt text](image-2.png)
+
+Este comando es curioso ya que como es una VM los dispositivos de PCI tambien son virtuales. Al parecer los primeros numeros muestran el numero del bus
+de esos dispositivos luego muestra el tipo de dispositivo y luego el fabricante pero como son virtuales me muestra muchos dispositivos de INTEL aunque yo en mi maquina verdadera tengo Ryzen 
+
 - `dmesg | grep usb`: Muestra los mensajes del kernel relacionados con dispositivos USB.
+
+![alt text](image-3.png)
+
+En este comando al principio no me dejaba ejecutarlo como todos los demas 
+porque este necesita darle permisos de superusuario por lo que lo ejecute
+con la palabra de sudo antes del comando y ya pude hacer que me mostrará la info.
 
 **Conteste:**
 
-- ¿Qué tipos de dispositivos se muestran en la salida de `lsblk`?
-- ¿Cuál es la diferencia entre `lsusb` y `lspci`?
-- ¿Qué información adicional proporciona `dmesg | grep usb`?
+- **¿Qué tipos de dispositivos se muestran en la salida de `lsblk`?**
+    
+    **RESPUESTA:** En mi caso me mostro lo que son los dispositivos de bloque de mi computadora los cuales son los de almacenamiento como los discos duros. Al principio, no entendia el porque me salian muchos dispositivos con el nombre de loop pero despues de buscar en internet a que se referian los loops encontre que no eran como tal dispositivos fisicos sino que son como archivos que el sistema usa
+por lo que realmente el unico dispositivo de bloque real que si me muestra es el de sda que es el disco duro de mi maquina virtual el cual tiene un tamaño de 25GB 
+  
+- **¿Cuál es la diferencia entre `lsusb` y `lspci`?**
+
+    **RESPUESTA:** La diferencia es que lsusb te muestra todo lo que está conectado a los puertos USB, como memorias, teclados, etc. Pero en mi caso, como estoy en una máquina virtual, solo me enseña los controladores USB que la VM emula. En cambio, lspci lista los dispositivos del bus PCI, que suelen ser cosas más internas del hardware como la tarjeta de red o de video. Igual, en mi VM todo esto es virtual, así que me aparecen cosas de Intel, aunque en mi compu real uso Ryzen.
+
+- **¿Qué información adicional proporciona `dmesg | grep usb`?**
+
+    **RESPUESTA:**  Este comando te da más detalles sobre lo que pasa con los dispositivos USB en el sistema, como si conectaste o desconectaste algo.Sirve mucho para ver si un dispositivo lo reconoce o no el sustema. Por ejemplo, intenté meter una USB, pero la VM no la registró, y al usar este comando confirmé que el kernel no detectó ningún evento relacionado con la USB. Así que claramente no pasó nada en la VM.
 
 ### **Actividad 2: Verificar dispositivos de almacenamiento**
 
 1. Use el comando `fdisk -l` para listar todos los discos y particiones.
+![alt text](image-4.png)
+
 2. Utilice `blkid` para ver los identificadores UUID y los tipos de sistema de archivos.
+![alt text](image-5.png)
+
 3. Use `df -h` para listar los dispositivos montados y su espacio disponible.
+![alt text](image-6.png)
 
 **Conteste:**
 
-- ¿Qué dispositivos de almacenamiento están conectados a su sistema?
-- ¿Qué particiones están montadas actualmente?
-- ¿Qué tipo de sistemas de archivos se usan en las particiones?
+- **¿Qué dispositivos de almacenamiento están conectados a su sistema?**
+
+    **RESPUESTA:** En mi sistema el único dispositivo de almacenamiento físico que aparece es el disco principal /dev/sda. Este es el disco virtual de mi máquina virtual y tiene un tamaño total de 25GB. También aparecen varios dispositivos tipo loop, pero estos no son discos reales, sino archivos que el sistema monta como si fueran dispositivos de bloque.
+
+- **¿Qué particiones están montadas actualmente?**
+
+    **RESPUESTA:** Según el comando df -h la partición montada es /dev/sda1 que está montada en la raíz (/) del sistema. También hay particiones temporales (tmpfs) que se usan para cosas como la memoria compartida (/dev/shm) y el sistema de archivos temporal en /run y /run/user/1000.
+
+- **¿Qué tipo de sistemas de archivos se usan en las particiones?**
+
+    **RESPUESTA:** En la partición principal /dev/sda1 el sistema de archivos es ext4, como se puede ver en el comando blkid. Las particiones temporales (tmpfs) usan un sistema de archivos en memoria que no es persistente y está diseñado para datos temporales.
 
 ### **Actividad 3: Explorar dispositivos de entradas**
 1. Ejecute `cat /proc/bus/input/devices` para listar los dispositivos de entrada.
