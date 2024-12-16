@@ -1204,6 +1204,7 @@ Otra forma de explicarlo puede ser a travez de un diagrama de flujo con en la im
 Normalmente este tipo de interrupciones pasan cuando el dispositivo de E/S termina una operación y emite la señal de interrupción para que el procesador sepa que el dispositivo de E/S termino. Esto es bueno para el procesador porque no tiene que estar esperando o escuchando activamente a que el E/S termine y así pueda seguir ejecutando instrucciones.
 
 **PSEUDOCODIGO**
+
 ```
 Iniciar sistema:
     Crear dispositivo USB con nombre "USB de ANGEL", ID 1, y memoria "SOY LA INFORMACION DE LECTURA".
@@ -1685,7 +1686,8 @@ Por ejemplo, si un programa necesita leer datos secuenciales de un archivo grand
 **Ejecute los siguientes comandos y anote sus observaciones:**
 
 - `lsblk`: Enumera los dispositivos de bloque.
-``` bash
+
+```bash
 angel@angel-virtualbox:~$ lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 loop0    7:0    0     4K  1 loop /snap/bare/5
@@ -1698,14 +1700,16 @@ loop6    7:6    0  10.7M  1 loop /snap/firmware-updater/127
 loop7    7:7    0  11.1M  1 loop /snap/firmware-updater/147
 loop8    7:8    0  91.7M  1 loop /snap/gtk-common-themes/1535
 loop9    7:9    0  44.3M  1 loop /snap/snapd/23258
-sda      8:0    0    25G  0 disk 
+sda      8:0    0    25G  0 disk
 └─sda1   8:1    0    25G  0 part /
 sr0     11:0    1  1024M  0 rom
 ```
 
 Este comando lo que me mostró fueron los dispositivos de bloque de mi equipo. Por ejemplo me mostro el disco principal de mi maquina con el nombre de sda y tambien muestra el tamaño que en este caso es de 25GB porque es el de la maquina virtual.
+
 - `lsusb`: Lista los dispositivos conectados a los puertos USB.
-``` bash
+
+```bash
 angel@angel-virtualbox:~$ lsusb
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
@@ -1715,7 +1719,8 @@ Bus 002 Device 002: ID 80ee:0021 VirtualBox USB Tablet
 Aqui se supone que este comando muestra los dispositivos USB en mi computadora pero como estoy en una VM lo que me muestra son los controladores de USB de la VM por asi decirlo. Ya que intente conectar una usb la cual si me la reconocia la maquina principal windows pero en la VM de linux no me la reconoce y tampoco el comando de lsusb me lo muestra
 
 - `lspci`: Muestra los dispositivos conectados al bus PCI.
-``` bash
+
+```bash
 angel@angel-virtualbox:~$ lspci
 00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
 00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
@@ -1731,9 +1736,10 @@ angel@angel-virtualbox:~$ lspci
 ```
 
 Este comando es curioso ya que como es una VM los dispositivos de PCI tambien son virtuales. Al parecer los primeros numeros muestran el numero del bus
-de esos dispositivos luego muestra el tipo de dispositivo y luego el fabricante pero como son virtuales me muestra muchos dispositivos de INTEL aunque yo en mi maquina verdadera tengo Ryzen 
+de esos dispositivos luego muestra el tipo de dispositivo y luego el fabricante pero como son virtuales me muestra muchos dispositivos de INTEL aunque yo en mi maquina verdadera tengo Ryzen
 
 - `dmesg | grep usb`: Muestra los mensajes del kernel relacionados con dispositivos USB.
+
 ```bash
 angel@angel-virtualbox:~$ dmesg | grep usb
 dmesg: fallo al leer el «buffer» del núcleo: Operación no permitida
@@ -1762,31 +1768,30 @@ angel@angel-virtualbox:~$ sudo dmesg | grep usb
 [    2.855214] hid-generic 0003:80EE:0021.0001: input,hidraw0: USB HID v1.10 Mouse [VirtualBox USB Tablet] on usb-0000:00:06.0-1/input0
 ```
 
-En este comando al principio no me dejaba ejecutarlo como todos los demas 
+En este comando al principio no me dejaba ejecutarlo como todos los demas
 porque este necesita darle permisos de superusuario por lo que lo ejecute
 con la palabra de sudo antes del comando y ya pude hacer que me mostrará la info.
 
 **Conteste:**
 
 - **¿Qué tipos de dispositivos se muestran en la salida de `lsblk`?**
-    
-    **RESPUESTA:** En mi caso me mostro lo que son los dispositivos de bloque de mi computadora los cuales son los de almacenamiento como los discos duros. Al principio, no entendia el porque me salian muchos dispositivos con el nombre de loop pero despues de buscar en internet a que se referian los loops encontre que no eran como tal dispositivos fisicos sino que son como archivos que el sistema usa
-por lo que realmente el unico dispositivo de bloque real que si me muestra es el de sda que es el disco duro de mi maquina virtual el cual tiene un tamaño de 25GB 
-  
+      **RESPUESTA:** En mi caso me mostro lo que son los dispositivos de bloque de mi computadora los cuales son los de almacenamiento como los discos duros. Al principio, no entendia el porque me salian muchos dispositivos con el nombre de loop pero despues de buscar en internet a que se referian los loops encontre que no eran como tal dispositivos fisicos sino que son como archivos que el sistema usa
+  por lo que realmente el unico dispositivo de bloque real que si me muestra es el de sda que es el disco duro de mi maquina virtual el cual tiene un tamaño de 25GB
 - **¿Cuál es la diferencia entre `lsusb` y `lspci`?**
 
-    **RESPUESTA:** La diferencia es que lsusb te muestra todo lo que está conectado a los puertos USB, como memorias, teclados, etc. Pero en mi caso, como estoy en una máquina virtual, solo me enseña los controladores USB que la VM emula. En cambio, lspci lista los dispositivos del bus PCI, que suelen ser cosas más internas del hardware como la tarjeta de red o de video. Igual, en mi VM todo esto es virtual, así que me aparecen cosas de Intel, aunque en mi compu real uso Ryzen.
+  **RESPUESTA:** La diferencia es que lsusb te muestra todo lo que está conectado a los puertos USB, como memorias, teclados, etc. Pero en mi caso, como estoy en una máquina virtual, solo me enseña los controladores USB que la VM emula. En cambio, lspci lista los dispositivos del bus PCI, que suelen ser cosas más internas del hardware como la tarjeta de red o de video. Igual, en mi VM todo esto es virtual, así que me aparecen cosas de Intel, aunque en mi compu real uso Ryzen.
 
 - **¿Qué información adicional proporciona `dmesg | grep usb`?**
 
-    **RESPUESTA:**  Este comando te da más detalles sobre lo que pasa con los dispositivos USB en el sistema, como si conectaste o desconectaste algo.Sirve mucho para ver si un dispositivo lo reconoce o no el sustema. Por ejemplo, intenté meter una USB, pero la VM no la registró, y al usar este comando confirmé que el kernel no detectó ningún evento relacionado con la USB. Así que claramente no pasó nada en la VM.
+  **RESPUESTA:** Este comando te da más detalles sobre lo que pasa con los dispositivos USB en el sistema, como si conectaste o desconectaste algo.Sirve mucho para ver si un dispositivo lo reconoce o no el sustema. Por ejemplo, intenté meter una USB, pero la VM no la registró, y al usar este comando confirmé que el kernel no detectó ningún evento relacionado con la USB. Así que claramente no pasó nada en la VM.
 
 ### **Actividad 2: Verificar dispositivos de almacenamiento**
 
 1. Use el comando `fdisk -l` para listar todos los discos y particiones.
+
 ```bash
 angel@angel-virtualbox:~$ sudo fdisk -l
-[sudo] contraseña para angel: 
+[sudo] contraseña para angel:
 Disco /dev/loop0: 4 KiB, 4096 bytes, 8 sectores
 Unidades: sectores de 1 * 512 = 512 bytes
 Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
@@ -1836,7 +1841,7 @@ Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
 
 
 Disco /dev/sda: 25 GiB, 26843545600 bytes, 52428800 sectores
-Disk model: VBOX HARDDISK   
+Disk model: VBOX HARDDISK
 Unidades: sectores de 1 * 512 = 512 bytes
 Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
 Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
@@ -1858,7 +1863,9 @@ Unidades: sectores de 1 * 512 = 512 bytes
 Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
 Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
 ```
+
 2. Utilice `blkid` para ver los identificadores UUID y los tipos de sistema de archivos.
+
 ```bash
 angel@angel-virtualbox:~$ blkid
 /dev/sda1: LABEL="lubuntu_2404" UUID="5608cbb2-a030-4d70-b390-7280d43c2b42" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="1645d00a-01"
@@ -1880,18 +1887,20 @@ tmpfs            197M   124K  197M   1% /run/user/1000
 
 - **¿Qué dispositivos de almacenamiento están conectados a su sistema?**
 
-    **RESPUESTA:** En mi sistema el único dispositivo de almacenamiento físico que aparece es el disco principal /dev/sda. Este es el disco virtual de mi máquina virtual y tiene un tamaño total de 25GB. También aparecen varios dispositivos tipo loop, pero estos no son discos reales, sino archivos que el sistema monta como si fueran dispositivos de bloque.
+  **RESPUESTA:** En mi sistema el único dispositivo de almacenamiento físico que aparece es el disco principal /dev/sda. Este es el disco virtual de mi máquina virtual y tiene un tamaño total de 25GB. También aparecen varios dispositivos tipo loop, pero estos no son discos reales, sino archivos que el sistema monta como si fueran dispositivos de bloque.
 
 - **¿Qué particiones están montadas actualmente?**
 
-    **RESPUESTA:** Según el comando df -h la partición montada es /dev/sda1 que está montada en la raíz del sistema. También hay particiones temporales que se usan para cosas como la memoria compartida y el sistema de archivos temporal.
+  **RESPUESTA:** Según el comando df -h la partición montada es /dev/sda1 que está montada en la raíz del sistema. También hay particiones temporales que se usan para cosas como la memoria compartida y el sistema de archivos temporal.
 
 - **¿Qué tipo de sistemas de archivos se usan en las particiones?**
 
-    **RESPUESTA:** En la partición principal /dev/sda1 el sistema de archivos es de tipo ext4.
+  **RESPUESTA:** En la partición principal /dev/sda1 el sistema de archivos es de tipo ext4.
 
 ### **Actividad 3: Explorar dispositivos de entradas**
+
 1. Ejecute `cat /proc/bus/input/devices` para listar los dispositivos de entrada.
+
 ```bash
 angel@angel-virtualbox:~$ cat /proc/bus/input/devices
 I: Bus=0019 Vendor=0000 Product=0001 Version=0000
@@ -1899,7 +1908,7 @@ N: Name="Power Button"
 P: Phys=LNXPWRBN/button/input0
 S: Sysfs=/devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
 U: Uniq=
-H: Handlers=kbd event0 
+H: Handlers=kbd event0
 B: PROP=0
 B: EV=3
 B: KEY=8000 10000000000000 0
@@ -1909,7 +1918,7 @@ N: Name="Sleep Button"
 P: Phys=LNXSLPBN/button/input0
 S: Sysfs=/devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
 U: Uniq=
-H: Handlers=kbd event1 
+H: Handlers=kbd event1
 B: PROP=0
 B: EV=3
 B: KEY=4000 0 0
@@ -1919,7 +1928,7 @@ N: Name="AT Translated Set 2 keyboard"
 P: Phys=isa0060/serio0/input0
 S: Sysfs=/devices/platform/i8042/serio0/input/input2
 U: Uniq=
-H: Handlers=sysrq kbd event2 leds 
+H: Handlers=sysrq kbd event2 leds
 B: PROP=0
 B: EV=120013
 B: KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
@@ -1931,7 +1940,7 @@ N: Name="Video Bus"
 P: Phys=LNXVIDEO/video/input0
 S: Sysfs=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/LNXVIDEO:00/input/input4
 U: Uniq=
-H: Handlers=kbd event3 
+H: Handlers=kbd event3
 B: PROP=0
 B: EV=3
 B: KEY=3e000b00000000 0 0 0
@@ -1941,7 +1950,7 @@ N: Name="VirtualBox USB Tablet"
 P: Phys=usb-0000:00:06.0-1/input0
 S: Sysfs=/devices/pci0000:00/0000:00:06.0/usb2/2-1/2-1:1.0/0003:80EE:0021.0001/input/input6
 U: Uniq=
-H: Handlers=mouse0 event4 js0 
+H: Handlers=mouse0 event4 js0
 B: PROP=0
 B: EV=1f
 B: KEY=1f0000 0 0 0 0
@@ -1954,7 +1963,7 @@ N: Name="ImExPS/2 Generic Explorer Mouse"
 P: Phys=isa0060/serio1/input0
 S: Sysfs=/devices/platform/i8042/serio1/input/input5
 U: Uniq=
-H: Handlers=mouse1 event5 
+H: Handlers=mouse1 event5
 B: PROP=1
 B: EV=7
 B: KEY=1f0000 0 0 0 0
@@ -1965,7 +1974,7 @@ N: Name="VirtualBox mouse integration"
 P: Phys=
 S: Sysfs=/devices/pci0000:00/0000:00:04.0/input/input7
 U: Uniq=
-H: Handlers=mouse2 event6 js1 
+H: Handlers=mouse2 event6 js1
 B: PROP=0
 B: EV=b
 B: KEY=10000 0 0 0 0
@@ -1973,52 +1982,57 @@ B: ABS=3
 ```
 
 2. Use `evtest` para monitorear eventos de dispositivos de entrada (requiere permisos de superusuario).
+
 ```bash
 angel@angel-virtualbox:~$ sudo evtest
-[sudo] contraseña para angel: 
+[sudo] contraseña para angel:
 sudo: evtest: orden no encontrada
-angel@angel-virtualbox:~$ 
+angel@angel-virtualbox:~$
 ```
+
 3. Investigue los siguientes dispositivos:
-* Teclado
-* Mouse
-* Controladores USB adicionales
+
+- Teclado
+- Mouse
+- Controladores USB adicionales
+
 4. Conteste:
-* **¿Qué eventos genera cada dispositivo al interactuar con ellos?**
 
-    **RESPUESTA:** Lo que noté al revisar /proc/bus/input/devices es que cada dispositivo tiene ciertos eventos que maneja. Por ejemplo, el teclado genera eventos relacionados con las teclas que presionas y hasta con las luces que tiene, como las de Bloq Mayús. El mouse también tiene sus eventos, que son para registrar movimientos y clics. Algo curioso es que el mouse aparece más de una vez: uno es el genérico del sistema y el otro es la integración de VirtualBox, que también puede manejar movimientos y posición absoluta. Luego están los botones de encendido y suspensión, que solo generan eventos cuando los activas. Quise usar evtest para ver los eventos en tiempo real, pero por algun motivo no me lo reconocia el comando el sistema.
-* **¿Cómo se identifican los dispositivos en `/proc/bus/input/devices`?**
+- **¿Qué eventos genera cada dispositivo al interactuar con ellos?**
 
-    **RESPUESTA:** Los dispositivos se identifican con varias cosas que te ayudan a entender qué es cada uno. Primero, está el tipo de conexión, como si es interno o USB. También tienen un nombre que describe qué son, como "AT Translated Set 2 keyboard" para el teclado. Luego, vienen con un identificador del fabricante y modelo, y algo llamado "Handlers", que básicamente es lo que maneja los eventos del dispositivo, por ejemplo, kbd para el teclado o mouse para el ratón. Otra cosa interesante es que te dice cómo están conectados físicamente al sistema, aunque en mi caso, como es una máquina virtual, muchas cosas son emuladas.
+  **RESPUESTA:** Lo que noté al revisar /proc/bus/input/devices es que cada dispositivo tiene ciertos eventos que maneja. Por ejemplo, el teclado genera eventos relacionados con las teclas que presionas y hasta con las luces que tiene, como las de Bloq Mayús. El mouse también tiene sus eventos, que son para registrar movimientos y clics. Algo curioso es que el mouse aparece más de una vez: uno es el genérico del sistema y el otro es la integración de VirtualBox, que también puede manejar movimientos y posición absoluta. Luego están los botones de encendido y suspensión, que solo generan eventos cuando los activas. Quise usar evtest para ver los eventos en tiempo real, pero por algun motivo no me lo reconocia el comando el sistema.
+
+- **¿Cómo se identifican los dispositivos en `/proc/bus/input/devices`?**
+
+  **RESPUESTA:** Los dispositivos se identifican con varias cosas que te ayudan a entender qué es cada uno. Primero, está el tipo de conexión, como si es interno o USB. También tienen un nombre que describe qué son, como "AT Translated Set 2 keyboard" para el teclado. Luego, vienen con un identificador del fabricante y modelo, y algo llamado "Handlers", que básicamente es lo que maneja los eventos del dispositivo, por ejemplo, kbd para el teclado o mouse para el ratón. Otra cosa interesante es que te dice cómo están conectados físicamente al sistema, aunque en mi caso, como es una máquina virtual, muchas cosas son emuladas.
 
 ### **Actividad 4: Examinar dispositivos de salida**
 
-
-
 1. Use `xrandr` para listar las pantallas conectadas y sus resoluciones.
+
 ```bash
 angel@angel-virtualbox:~$ xrandr
 Screen 0: minimum 1 x 1, current 1280 x 800, maximum 16384 x 16384
 Virtual1 connected primary 1280x800+0+0 (normal left inverted right x axis y axis) 0mm x 0mm
-   1280x800      60.00*+  59.81  
-   1920x1440     60.00  
-   1856x1392     60.00  
-   1792x1344     60.00  
-   1920x1200     59.88  
-   1920x1080     59.96  
-   1600x1200     60.00  
-   1680x1050     59.95  
-   1400x1050     59.98  
-   1280x1024     60.02  
-   1440x900      59.89  
-   1280x960      60.00  
-   1360x768      60.02  
-   1152x864      75.00  
-   1280x768      59.87  
-   1280x720      59.86  
-   1024x768      60.00  
-   800x600       60.32  
-   640x480       59.94  
+   1280x800      60.00*+  59.81
+   1920x1440     60.00
+   1856x1392     60.00
+   1792x1344     60.00
+   1920x1200     59.88
+   1920x1080     59.96
+   1600x1200     60.00
+   1680x1050     59.95
+   1400x1050     59.98
+   1280x1024     60.02
+   1440x900      59.89
+   1280x960      60.00
+   1360x768      60.02
+   1152x864      75.00
+   1280x768      59.87
+   1280x720      59.86
+   1024x768      60.00
+   800x600       60.32
+   640x480       59.94
 Virtual2 disconnected (normal left inverted right x axis y axis)
 Virtual3 disconnected (normal left inverted right x axis y axis)
 Virtual4 disconnected (normal left inverted right x axis y axis)
@@ -2029,45 +2043,51 @@ Virtual8 disconnected (normal left inverted right x axis y axis)
 ```
 
 2. Ejecute `aplay -l` para listar las tarjetas de sonido disponibles.
-``` bash
+
+```bash
 angel@angel-virtualbox:~$ aplay -l
 **** Lista de PLAYBACK dispositivos hardware ****
 tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 82801AA-ICH]
   Subdispositivos: 1/1
   Subdispositivo #0: subdevice #0
 ```
+
 3. Use `lsof /dev/snd/*` para ver qué procesos están utilizando la tarjeta de sonido.
-``` bash
+
+```bash
 angel@angel-virtualbox:~$ lsof /dev/snd/*
 COMMAND    PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 pipewire  1185 angel   59u   CHR  116,1      0t0  412 /dev/snd/seq
 pipewire  1185 angel   60u   CHR  116,1      0t0  412 /dev/snd/seq
 wireplumb 1188 angel   36u   CHR  116,5      0t0  665 /dev/snd/controlC0
 ```
+
 4. Conteste:
-* **¿Qué salidas de video están disponibles en su sistema?**
 
-   **RESPUESTA:** Segun lo que me mostro el comando como tal solo tengo una salida de video activa que es la de Virtual1 la cual aparece como conectada y tiene una resolución de 1280x800 que es la resolución actual. Luego muestra tabmien como las resoluciones disponibles para esa salida de video y tambien muestra mas salida con el nombre de virtual2, virtual3 y asi pero que aparecen que estan desconectadas.
+- **¿Qué salidas de video están disponibles en su sistema?**
 
-* **¿Qué dispositivos de sonido se detectaron?**
+  **RESPUESTA:** Segun lo que me mostro el comando como tal solo tengo una salida de video activa que es la de Virtual1 la cual aparece como conectada y tiene una resolución de 1280x800 que es la resolución actual. Luego muestra tabmien como las resoluciones disponibles para esa salida de video y tambien muestra mas salida con el nombre de virtual2, virtual3 y asi pero que aparecen que estan desconectadas.
 
-    **RESPUESTA:** El comando aplay -l mostró que solo hay una tarjeta de sonido disponible que era la de la tarjeta Intel 82801AA-ICH.
+- **¿Qué dispositivos de sonido se detectaron?**
 
-* **¿Qué procesos están usando la tarjeta de sonido?**
+  **RESPUESTA:** El comando aplay -l mostró que solo hay una tarjeta de sonido disponible que era la de la tarjeta Intel 82801AA-ICH.
 
-    **RESPUESTA:** Cuando ejecute el comando de lsof /dev/snd/* aparecian dos procesos utilizando la tarjeta de sonido. El primero es pipewire con el PID 1185 y el otro wireplumb con el PID 1188.
+- **¿Qué procesos están usando la tarjeta de sonido?**
+
+  **RESPUESTA:** Cuando ejecute el comando de lsof /dev/snd/\* aparecian dos procesos utilizando la tarjeta de sonido. El primero es pipewire con el PID 1185 y el otro wireplumb con el PID 1188.
 
 ### **Actividad 5: Crear un script de resumen**
 
-1. Cree un archivo llamado `dispositivos.sh` y agregue el siguiente contenido: ```bash #!/bin/bash echo "Dispositivos de bloque:" lsblk echo "Dispositivos USB:" lsusb echo "Dispositivos PCI:" lspci echo "Dispositivos de entrada:" cat /proc/bus/input/devices echo "Salidas de video:" xrandr echo "Tarjetas de sonido:" aplay -l ```
-![alt text](imagenes/script.png)
+1. Cree un archivo llamado `dispositivos.sh` y agregue el siguiente contenido: `bash #!/bin/bash echo "Dispositivos de bloque:" lsblk echo "Dispositivos USB:" lsusb echo "Dispositivos PCI:" lspci echo "Dispositivos de entrada:" cat /proc/bus/input/devices echo "Salidas de video:" xrandr echo "Tarjetas de sonido:" aplay -l `
+   ![alt text](imagenes/script.png)
 2. Ejecute el script usando `bash dispositivos.sh`.
-![alt text](imagenes/dispositivos.sh.png)
+   ![alt text](imagenes/dispositivos.sh.png)
 3. Modifique el script para guardar la salida en un archivo llamado `resumendispositivos.txt`.
-![alt text](imagenes/resumendispositivos.png)
+   ![alt text](imagenes/resumendispositivos.png)
 
 **Contenido del archivo txt:**
-``` bash
+
+```bash
 Dispositivos de bloque:
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 loop0    7:0    0     4K  1 loop /snap/bare/5
@@ -2080,9 +2100,9 @@ loop6    7:6    0  10.7M  1 loop /snap/firmware-updater/127
 loop7    7:7    0  11.1M  1 loop /snap/firmware-updater/147
 loop8    7:8    0  91.7M  1 loop /snap/gtk-common-themes/1535
 loop9    7:9    0  44.3M  1 loop /snap/snapd/23258
-sda      8:0    0    25G  0 disk 
+sda      8:0    0    25G  0 disk
 └─sda1   8:1    0    25G  0 part /
-sr0     11:0    1  1024M  0 rom  
+sr0     11:0    1  1024M  0 rom
 Dispositivos USB:
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
@@ -2105,7 +2125,7 @@ N: Name="Power Button"
 P: Phys=LNXPWRBN/button/input0
 S: Sysfs=/devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
 U: Uniq=
-H: Handlers=kbd event0 
+H: Handlers=kbd event0
 B: PROP=0
 B: EV=3
 B: KEY=8000 10000000000000 0
@@ -2115,7 +2135,7 @@ N: Name="Sleep Button"
 P: Phys=LNXSLPBN/button/input0
 S: Sysfs=/devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
 U: Uniq=
-H: Handlers=kbd event1 
+H: Handlers=kbd event1
 B: PROP=0
 B: EV=3
 B: KEY=4000 0 0
@@ -2125,7 +2145,7 @@ N: Name="AT Translated Set 2 keyboard"
 P: Phys=isa0060/serio0/input0
 S: Sysfs=/devices/platform/i8042/serio0/input/input2
 U: Uniq=
-H: Handlers=sysrq kbd event2 leds 
+H: Handlers=sysrq kbd event2 leds
 B: PROP=0
 B: EV=120013
 B: KEY=402000000 3803078f800d001 feffffdfffefffff fffffffffffffffe
@@ -2137,7 +2157,7 @@ N: Name="Video Bus"
 P: Phys=LNXVIDEO/video/input0
 S: Sysfs=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/LNXVIDEO:00/input/input4
 U: Uniq=
-H: Handlers=kbd event3 
+H: Handlers=kbd event3
 B: PROP=0
 B: EV=3
 B: KEY=3e000b00000000 0 0 0
@@ -2147,7 +2167,7 @@ N: Name="VirtualBox USB Tablet"
 P: Phys=usb-0000:00:06.0-1/input0
 S: Sysfs=/devices/pci0000:00/0000:00:06.0/usb2/2-1/2-1:1.0/0003:80EE:0021.0001/input/input6
 U: Uniq=
-H: Handlers=mouse0 event4 js0 
+H: Handlers=mouse0 event4 js0
 B: PROP=0
 B: EV=1f
 B: KEY=1f0000 0 0 0 0
@@ -2160,7 +2180,7 @@ N: Name="ImExPS/2 Generic Explorer Mouse"
 P: Phys=isa0060/serio1/input0
 S: Sysfs=/devices/platform/i8042/serio1/input/input5
 U: Uniq=
-H: Handlers=mouse1 event5 
+H: Handlers=mouse1 event5
 B: PROP=1
 B: EV=7
 B: KEY=1f0000 0 0 0 0
@@ -2171,7 +2191,7 @@ N: Name="VirtualBox mouse integration"
 P: Phys=
 S: Sysfs=/devices/pci0000:00/0000:00:04.0/input/input7
 U: Uniq=
-H: Handlers=mouse2 event6 js1 
+H: Handlers=mouse2 event6 js1
 B: PROP=0
 B: EV=b
 B: KEY=10000 0 0 0 0
@@ -2180,25 +2200,25 @@ B: ABS=3
 Salidas de video:
 Screen 0: minimum 1 x 1, current 1280 x 800, maximum 16384 x 16384
 Virtual1 connected primary 1280x800+0+0 (normal left inverted right x axis y axis) 0mm x 0mm
-   1280x800      60.00*+  59.81  
-   1920x1440     60.00  
-   1856x1392     60.00  
-   1792x1344     60.00  
-   1920x1200     59.88  
-   1920x1080     59.96  
-   1600x1200     60.00  
-   1680x1050     59.95  
-   1400x1050     59.98  
-   1280x1024     60.02  
-   1440x900      59.89  
-   1280x960      60.00  
-   1360x768      60.02  
-   1152x864      75.00  
-   1280x768      59.87  
-   1280x720      59.86  
-   1024x768      60.00  
-   800x600       60.32  
-   640x480       59.94  
+   1280x800      60.00*+  59.81
+   1920x1440     60.00
+   1856x1392     60.00
+   1792x1344     60.00
+   1920x1200     59.88
+   1920x1080     59.96
+   1600x1200     60.00
+   1680x1050     59.95
+   1400x1050     59.98
+   1280x1024     60.02
+   1440x900      59.89
+   1280x960      60.00
+   1360x768      60.02
+   1152x864      75.00
+   1280x768      59.87
+   1280x720      59.86
+   1024x768      60.00
+   800x600       60.32
+   640x480       59.94
 Virtual2 disconnected (normal left inverted right x axis y axis)
 Virtual3 disconnected (normal left inverted right x axis y axis)
 Virtual4 disconnected (normal left inverted right x axis y axis)
@@ -2214,196 +2234,448 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 ```
 
 4. Conteste:
-* **¿Qué ventajas tiene usar un script para recopilar esta información?**
 
-**RESPUESTA:** Principalmente el tiempo que te ahorras porque con el script puedes ejecutar todos esos comandos solamente ejectuando el archivo dispositivos.sh y ya no tienes que estar ejectuando cada comando individualmente cada vez que se quiere hacer la recopilacion de los datos. 
+- **¿Qué ventajas tiene usar un script para recopilar esta información?**
 
-* **¿Qué cambios realizaría para personalizar el script?**
+**RESPUESTA:** Principalmente el tiempo que te ahorras porque con el script puedes ejecutar todos esos comandos solamente ejectuando el archivo dispositivos.sh y ya no tienes que estar ejectuando cada comando individualmente cada vez que se quiere hacer la recopilacion de los datos.
 
-**RESPUESTA:** 
+- **¿Qué cambios realizaría para personalizar el script?**
 
+**RESPUESTA:**
 
 ### **Actividad 6: Reflexión y discusión**
 
 1. Reflexione sobre lo aprendido y discuta en equipo:
 
-* **¿Qué comando encontró más útil y por qué?**
+- **¿Qué comando encontró más útil y por qué?**
 
-**RESPUESTA:** 
-* **¿Qué tan importante es conocer los dispositivos conectados al sistema?**
+  **RESPUESTA:** El comando que más me ha servido es lsblk. Es muy útil porque muestra todos los discos y particiones y con solo ejecutarlo puedo ver qué discos están conectados, cuáles están montados y cómo está organizada la estructura del almacenamiento y así no tengo que andar buscando información de cada dispositivo por separado.
 
-**RESPUESTA:** 
+- **¿Qué tan importante es conocer los dispositivos conectados al sistema?**
 
-* **¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?**
+  **RESPUESTA:** Es bastante importante saber qué dispositivos están conectados, porque si algo falla o si quiero agregar nuevo hardware, necesito estar seguro de qué tengo y cómo está configurado. Si no sé qué dispositivos tengo, no voy a poder solucionar problemas de almacenamiento o conectividad que puedan surgin. Además, con esta información, puedo evitar conflictos entre dispositivos.
 
-**RESPUESTA:** 
+- **¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?**
 
+**RESPUESTA:**
 
 ## **Comandos de Entrada y Salida, Discos y Archivos**
 
 ### **Ejercicio 1: Montar y Desmontar Discos**
-* Objetivo: Aprender a montar y desmontar un dispositivo externo.
 
-* Inserta una memoria USB en el sistema.
+- Objetivo: Aprender a montar y desmontar un dispositivo externo.
 
-* Encuentra el dispositivo usando el comando:
-    ``` 
-    lsblk
-    ```
- 
+- Inserta una memoria USB en el sistema.
 
-    ``` 
-    fdisk -l
-    ```
-* Monta la memoria USB en un directorio, por ejemplo, `/mnt/usb`: 
-    ```
-    sudo mount /dev/sdX1 /mnt/usb
-    ```
+- Encuentra el dispositivo usando el comando:
 
-* Verifica que esté montado correctamente: 
-    ```
-    df -h
-    ```
+  ```
+  lsblk
+  ```
 
-* Copia un archivo desde tu directorio personal al dispositivo USB:  
-    ```
-    cp archivo.txt /mnt/usb/
-    ```
+  ```
+  fdisk -l
+  ```
 
-* Desmonta la memoria USB: 
-    ```
-    sudo umount /mnt/usb
-    ```
+- Monta la memoria USB en un directorio, por ejemplo, `/mnt/usb`:
 
+  ```
+  sudo mount /dev/sdX1 /mnt/usb
+  ```
+
+- Verifica que esté montado correctamente:
+
+  ```
+  df -h
+  ```
+
+- Copia un archivo desde tu directorio personal al dispositivo USB:
+
+  ```
+  cp archivo.txt /mnt/usb/
+  ```
+
+- Desmonta la memoria USB:
+  ```
+  sudo umount /mnt/usb
+  ```
 
 ### **Ejercicio 2: Redirección de Entrada y Salida**
-* **Objetivo**: Usar redirección para guardar la salida de comandos en archivos.
 
-* Lista los archivos de tu directorio actual y guarda el resultado en un archivo `listado.txt`:
-    ```
-    ls -l > listado.txt
-    ```
+- **Objetivo**: Usar redirección para guardar la salida de comandos en archivos.
 
-* Muestra el contenido del archivo en la terminal:
-    ```
-    cat listado.txt
-    ```
+- Lista los archivos de tu directorio actual y guarda el resultado en un archivo `listado.txt`:
 
-* Añade la fecha actual al final del archivo:
-    ```
-    date >> listado.txt
-    ```
+  ```
+  ls -l > listado.txt
+  ```
 
-* Muestra todo el contenido del archivo nuevamente:
-    ```
-    cat listado.txt
-    ```
+- Muestra el contenido del archivo en la terminal:
+
+  ```
+  cat listado.txt
+  ```
+
+- Añade la fecha actual al final del archivo:
+
+  ```
+  date >> listado.txt
+  ```
+
+- Muestra todo el contenido del archivo nuevamente:
+  ```
+  cat listado.txt
+  ```
 
 ---
 
 ### **Ejercicio 3: Copiar y Mover Archivos**
-* **Objetivo**: Practicar copiar y mover archivos y directorios.
 
-* Crea un archivo de texto llamado `archivo1.txt`:
-    ```
-    echo "Este es un archivo de prueba" > archivo1.txt
-    ```
+- **Objetivo**: Practicar copiar y mover archivos y directorios.
 
-* Copia este archivo a otro directorio, por ejemplo, `/tmp`:
-    ```
-    cp archivo1.txt /tmp/
-    ```
+- Crea un archivo de texto llamado `archivo1.txt`:
 
-* Renombra el archivo copiado a `archivo2.txt` en `/tmp`:
-    ```
-    mv /tmp/archivo1.txt /tmp/archivo2.txt
-    ```
+  ```
+  echo "Este es un archivo de prueba" > archivo1.txt
+  ```
 
-* Mueve el archivo `archivo2.txt` de vuelta a tu directorio actual:
-    ```
-    mv /tmp/archivo2.txt .
-    ```
+- Copia este archivo a otro directorio, por ejemplo, `/tmp`:
+
+  ```
+  cp archivo1.txt /tmp/
+  ```
+
+- Renombra el archivo copiado a `archivo2.txt` en `/tmp`:
+
+  ```
+  mv /tmp/archivo1.txt /tmp/archivo2.txt
+  ```
+
+- Mueve el archivo `archivo2.txt` de vuelta a tu directorio actual:
+  ```
+  mv /tmp/archivo2.txt .
+  ```
 
 ---
 
 ### **Ejercicio 4: Comprimir y Descomprimir Archivos**
-* **Objetivo**: Aprender a trabajar con compresión de archivos.
 
-* Crea un directorio llamado `backup` y copia algunos archivos en él.
+- **Objetivo**: Aprender a trabajar con compresión de archivos.
 
-* Comprime el directorio `backup` en un archivo `.tar.gz`:
-    ```
-    tar -czvf backup.tar.gz backup/
-    ```
+- Crea un directorio llamado `backup` y copia algunos archivos en él.
 
-* Borra el directorio original y extrae el contenido del archivo comprimido:
-    ```
-    tar -xzvf backup.tar.gz
-    ```
+- Comprime el directorio `backup` en un archivo `.tar.gz`:
+
+  ```
+  tar -czvf backup.tar.gz backup/
+  ```
+
+- Borra el directorio original y extrae el contenido del archivo comprimido:
+  ```
+  tar -xzvf backup.tar.gz
+  ```
 
 ---
 
 ### **Ejercicio 5: Permisos y Propiedades de Archivos**
-* **Objetivo**: Aprender a modificar permisos y propietarios de archivos.
 
-* Crea un archivo llamado `privado.txt`:
-    ```
-    touch privado.txt
-    ```
+- **Objetivo**: Aprender a modificar permisos y propietarios de archivos.
 
-* Cambia los permisos del archivo para que solo el propietario pueda leer y escribir:
-    ```
-    chmod 600 privado.txt
-    ```
+- Crea un archivo llamado `privado.txt`:
 
-* Cambia el propietario del archivo a otro usuario (si tienes privilegios):
-    ```
-    sudo chown usuario privado.txt
-    ```
+  ```
+  touch privado.txt
+  ```
+
+- Cambia los permisos del archivo para que solo el propietario pueda leer y escribir:
+
+  ```
+  chmod 600 privado.txt
+  ```
+
+- Cambia el propietario del archivo a otro usuario (si tienes privilegios):
+  ```
+  sudo chown usuario privado.txt
+  ```
 
 ---
 
 ### **Ejercicio 6: Exploración de Dispositivos**
-* **Objetivo**: Identificar discos y particiones en el sistema.
 
-* Usa `lsblk` para listar los discos y particiones:
-    ```
-    lsblk
-    ```
+- **Objetivo**: Identificar discos y particiones en el sistema.
 
-* Usa `du -sh` para ver el tamaño del contenido en un directorio de tu elección:
-    ```
-    du -sh /ruta/directorio
-    ```
+- Usa `lsblk` para listar los discos y particiones:
 
-* Verifica el uso de disco con `df -h`:
-    ```
-    df -h
-    ```
+  ```
+  lsblk
+  ```
+
+- Usa `du -sh` para ver el tamaño del contenido en un directorio de tu elección:
+
+  ```
+  du -sh /ruta/directorio
+  ```
+
+- Verifica el uso de disco con `df -h`:
+  ```
+  df -h
+  ```
 
 ---
 
 ### **Ejercicio 7: Crear y Formatear Particiones**
-* **Objetivo**: Crear y formatear una nueva partición (Usar disco de práctica o máquina virtual).
 
-* Identifica un disco no particionado:
-    ```
-    sudo fdisk -l
-    ```
+- **Objetivo**: Crear y formatear una nueva partición (Usar disco de práctica o máquina virtual).
 
-* Usa `fdisk` para crear una nueva partición:
-    ```
-    sudo fdisk /dev/sdX
-    ```
+- Identifica un disco no particionado:
 
-* Formatea la partición como `ext4`:
-    ```
-    sudo mkfs.ext4 /dev/sdX1
-    ```
+  ```
+  sudo fdisk -l
+  ```
 
-* Monta la partición en un directorio y prueba escribiendo archivos en ella:
-    ```
-    sudo mount /dev/sdX1 /mnt/nueva_particion
-    echo "Prueba de escritura" > /mnt/nueva_particion/test.txt
-    ```
+- Usa `fdisk` para crear una nueva partición:
 
+  ```
+  sudo fdisk /dev/sdX
+  ```
+
+- Formatea la partición como `ext4`:
+
+  ```
+  sudo mkfs.ext4 /dev/sdX1
+  ```
+
+- Monta la partición en un directorio y prueba escribiendo archivos en ella:
+  ```
+  sudo mount /dev/sdX1 /mnt/nueva_particion
+  echo "Prueba de escritura" > /mnt/nueva_particion/test.txt
+  ```
+
+## **Sistemas de Archivos**
+
+### **Ejercicio 1: Concepto y Noción de Archivo Real y Virtual**
+
+**Define el concepto de archivo real y archivo virtual.**
+
+**Archivo fisico**: Un archivo fisico es aquel archivo que ocupa espacio en algun dispositivo de almacenamiento fisico y el cual no se borra cuando un proceso que lo usa termina osea que es persistente.
+
+**Archivo virtual:** El archivo virtual es un archivo que genera por el SO o por algun proceso que esta en ejecución para escribir, leer o cualquier otra operacion que el proceso necesita hacer cuando se esta ejecutando por lo que su tamaño es variado ademas de que son temporales y son eliminados cuando ya no los estan usando.Este proceso no ocupa espacio de algun dispositivo de almacenamiento y es por eso que se les dice virtual.
+
+**Proporciona ejemplos de cómo los sistemas operativos manejan archivos reales y virtuales.**
+
+**Explica un caso práctico donde un archivo virtual sea más útil que un archivo real.**
+
+Linux tiene un directorio /proc de archivos virtuales que contienen informacion del estado del sistema en ese momento de la ejecucion. Como son archivos virtuales tambien son dinamicos y se crean en el momento en el que el sistema inicia y se borran cuando este se apaga.
+
+Usar archivos virtuales es mucho más útil que archivos reales porque no necesitas estar guardando esta información constantemente en el disco, lo que ocuparía espacio innecesario. Además, como los datos del sistema cambian todo el tiempo, no tiene sentido almacenar estados anteriores porque lo único que importa es el estado actual. Con los archivos virtuales, el sistema puede generar esta información al momento, sin usar espacio en disco ni dejar basura después. Es rápido, práctico y eficiente.
+
+---
+
+### **Ejercicio 2: Componentes de un Sistema de Archivos**
+
+**Descripción:**  
+Investiga los componentes principales de un sistema de archivos y compáralos entre dos sistemas operativos, como Linux y Windows.
+
+**Tareas:**  
+**Identifica los componentes clave de un sistema de archivos (por ejemplo, metadatos, tablas de asignación, etc.).**
+Los componentes de un sistema de archivos son:
+
+- **Archivos**: Es una coleccion de datos que contiene informacion.
+- **Directorios**: Es un contenedor que guarda archivos y otros directorios y sirve para organizar los archivos.
+
+  ![alt text](image-2.png)
+
+**Tabla de asignación de bloques**: Esta es una estructura que rastrea qué bloques en el dispositivo de almacenamiento están ocupados y cuáles están libres.
+
+- **Metadatos del archivo**: Los metadatos incluyen informacion del archivo como el nombre, tamaño, fecha de creacion, fecha de modificacion, permisos de acceso, etc.
+
+La tabla de abajo muestra mas metadatos que pueden usarse pero varia del sistema de archivos si valen o no.
+
+![alt text](image.png)
+
+- **Operaciones del sistema de archivo**: Son la acciones que pueden realizarse en los archivos y directirios. Algunas de las operaciones son: crear, mover, copiar, eliminar, renombrar, etc.
+
+**Crea un cuadro comparativo de cómo estos componentes funcionan en sistemas como EXT4 y NTFS.**  
+| **Componente** | **EXT4** | **NTFS** |
+|----------------------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **Archivos** | En EXT4, los archivos se organizan en bloques y cada uno tiene un **inode** que guarda los datos del archivo (como su tamaño, permisos, etc.) y apunta a dónde están sus bloques en el disco. | En NTFS, también se usan bloques, pero la forma de organizarlos es un poco más complicada. Usa una **Master File Table (MFT)** para llevar el control de los archivos y sus ubicaciones. |
+| **Directorios** | Los directorios en EXT4 son básicamente listas que apuntan a los archivos, usando los inodos. Es sencillo y directo. | En NTFS, los directorios también apuntan a los archivos, pero aquí se pueden hacer cosas más avanzadas como enlaces simbólicos y enlaces duros. Son más flexibles y potentes. |
+| **Tabla de asignación de bloques**| EXT4 usa algo llamado **bitmap** para saber qué bloques están ocupados y cuáles están libres. Es como una lista de control. | NTFS usa la **MFT** no solo para los metadatos, sino también para gestionar la asignación de bloques. Cada archivo tiene su propio registro que ayuda a ubicarlo en el disco. |
+| **Metadatos del archivo** | Los metadatos en EXT4 se guardan en los **inodos**, donde se guarda información como el tamaño del archivo, el dueño, los permisos y los punteros a los bloques de datos. | En NTFS, los metadatos también se guardan en la **MFT**, pero con más detalles: fechas, permisos, atributos especiales (como cifrado o compresión), y los punteros a los bloques de datos. |
+| **Operaciones del sistema de archivo** | EXT4 permite operaciones básicas como crear, mover, copiar, eliminar y renombrar archivos. Además, tiene **journaling**, lo que ayuda a mantener todo seguro en caso de caídas del sistema. | NTFS permite las mismas operaciones, pero también tiene funciones extras como **compresión**, **cifrado** de archivos y **control de versiones**. Además, su sistema de recuperación es más robusto. |
+
+**Describe las ventajas y desventajas de cada sistema basado en sus componentes.**
+
+---
+
+### **Ejercicio 3: Organización Lógica y Física de Archivos**
+
+**Descripción:**  
+Crea un esquema que muestre la organización lógica y física de un sistema de archivos. Explica cómo se relacionan las estructuras lógicas con las físicas en el disco.
+
+**Tareas:**
+
+- **Diseña un árbol jerárquico que represente la organización lógica de directorios y subdirectorios.**
+
+![alt text](<Diagrama en blanco.jpeg>)
+
+- **Explica cómo se traduce la dirección lógica a la dirección física en el disco.**
+
+- **Proporciona un ejemplo práctico de cómo un archivo se almacena físicamente.**
+
+  Por ejemplo, cuando juegas a Left 4 Dead el juego guarda tu progreso y configuraciones en un archivo config.cfg y este archivo luego lo almacena en el disco duro en bloques que el sistema de archivos como NTFS en Windows, gestiona y despues el sistema de archivos guarda información sobre el archivo (como su ubicación y tamaño) en estructuras como la MFT en NTFS o los inodos en EXT4. Cuando guardas tu partida o cambias alguna configuración, el juego actualiza esos archivos y el sistema de archivos asigna nuevos bloques si es necesario. Si vuelves a cargar el juego, el archivo se lee y se usa para restaurar tu progreso.
+
+---
+
+### **Ejercicio 4: Mecanismos de Acceso a los Archivos**
+
+**Descripción:**  
+Simula diferentes mecanismos de acceso a archivos (secuencial, directo e indexado) en un entorno práctico.
+
+**Tareas:**
+
+1.  **Define los diferentes mecanismos de acceso.**
+
+    **Acceso secuencial**: En este mecanismo, como lo dice su nombre se accede al archivo de manera secuencial, es decir que el proceso que esta leyendo el archivo va byte por byte o registro por registro de manera ordenada y no puede saltarse ninguna parte.
+
+    **Aceso por indice:** Este mecanismo utiliza una especie de "índice" o tabla que te dice exactamente dónde están los datos dentro del archivo. Así, en lugar de leer todo el archivo, puedes buscar rápidamente la ubicación de la información que necesitas, lo que ahorra tiempo y recursos.
+
+    **Acceso directamente por posicion:** En este mecanismo, se puede acceder a un archivo directamente en la parte que se necesita, sin tener que leer todo desde el principio
+
+2.  **Escribe un pseudocódigo que muestre cómo acceder a:**
+
+    - **Un archivo secuencialmente.**
+
+
+        ```
+        abrir archivo "archivo.txt" en modo lectura
+        mientras no se haya llegado al final del archivo:
+            leer siguiente byte o registro
+        cerrar archivo
+        ```
+
+    - **Un archivo directamente mediante su posición.**
+
+        ```
+        abrir archivo "archivo.txt" en modo lectura/escritura
+        mover a la posición deseada (por ejemplo, byte 1000)
+        leer datos en esa posición
+        cerrar archivo
+        ```
+    - **Un archivo utilizando un índice.**
+        ```
+        abrir archivo "archivo.txt" en modo lectura
+        obtener índice de la posición deseada 
+        mover a la posición indicada en el índice
+        leer datos en esa posición
+        cerrar archivo
+        ```
+3.  **Compara las ventajas de cada mecanismo dependiendo del caso de uso.**
+
+---
+
+### **Ejercicio 5: Modelo Jerárquico y Mecanismos de Recuperación en Caso de Falla**
+
+**Descripción:**  
+Diseña una estructura jerárquica para un sistema de archivos y simula un escenario de falla en el sistema. Describe cómo recuperar los datos utilizando mecanismos de recuperación.
+
+**Tareas:**
+
+- Diseña un modelo jerárquico para un sistema de archivos con al menos tres niveles de directorios.
+- Simula una falla en un directorio específico y describe los pasos necesarios para recuperarlo.
+- Explica qué herramientas o técnicas de respaldo (backup) utilizarías para evitar pérdida de datos.
+
+---
+
+## **Protección y Seguridad**
+
+### **Ejercicio 1: Concepto y Objetivos de Protección y Seguridad**
+
+**Descripción:**  
+Investiga los conceptos de protección y seguridad en sistemas operativos. Analiza los objetivos principales que deben cumplir estos mecanismos.
+
+**Tareas:**
+
+- Define los conceptos de protección y seguridad en el contexto de sistemas operativos.
+- Identifica los objetivos principales de un sistema de protección y seguridad, como confidencialidad, integridad y disponibilidad.
+- Da un ejemplo práctico de cómo se aplican estos objetivos en un sistema operativo.
+
+---
+
+### **Ejercicio 2: Clasificación Aplicada a la Seguridad**
+
+**Descripción:**  
+Clasifica los mecanismos de seguridad en un sistema operativo y explica cómo cada tipo contribuye a la protección del sistema.
+
+**Tareas:**
+
+- Investiga las clasificaciones comunes de la seguridad, como física, lógica y de red.
+- Explica el papel de cada clasificación en la protección de un sistema operativo.
+- Proporciona ejemplos prácticos de herramientas o técnicas utilizadas en cada clasificación.
+
+---
+
+### **Ejercicio 3: Funciones del Sistema de Protección**
+
+**Descripción:**  
+Analiza las funciones que cumple un sistema de protección en un entorno multiusuario.
+
+**Tareas:**
+
+- Describe cómo un sistema de protección controla el acceso a los recursos.
+- Explica las funciones principales como autenticación, autorización y auditoría.
+- Diseña un caso práctico donde se muestren las funciones de un sistema de protección en acción.
+
+---
+
+### **Ejercicio 4: Implantación de Matrices de Acceso**
+
+**Descripción:**  
+Crea e implementa una matriz de acceso para un sistema que contiene usuarios y recursos con diferentes niveles de permisos.
+
+**Tareas:**
+
+- Diseña una matriz de acceso para un sistema con al menos 3 usuarios y 4 recursos.
+- Explica cómo esta matriz se utiliza para controlar el acceso en un sistema operativo.
+- Simula un escenario donde un usuario intenta acceder a un recurso no permitido y cómo la matriz lo bloquea.
+
+---
+
+### **Ejercicio 5: Protección Basada en el Lenguaje**
+
+**Descripción:**  
+Investiga cómo los lenguajes de programación pueden implementar mecanismos de protección.
+
+**Tareas:**
+
+- Explica el concepto de protección basada en el lenguaje.
+- Proporciona un ejemplo de cómo un lenguaje como Java o Rust asegura la memoria y evita accesos no autorizados.
+- Compara este enfoque con otros mecanismos de protección en sistemas operativos.
+
+---
+
+### **Ejercicio 6: Validación y Amenazas al Sistema**
+
+**Descripción:**  
+Analiza las principales amenazas a un sistema operativo y los mecanismos de validación utilizados para prevenirlas.
+
+**Tareas:**
+
+- Investiga y describe al menos tres tipos de amenazas comunes (por ejemplo, malware, ataques de fuerza bruta, inyección de código).
+- Explica los mecanismos de validación como autenticación multifactor y control de integridad.
+- Diseña un esquema de validación para un sistema operativo con múltiples usuarios.
+
+---
+
+### **Ejercicio 7: Cifrado**
+
+**Descripción:**  
+Explora cómo los mecanismos de cifrado protegen la información en un sistema operativo.
+
+**Tareas:**
+
+- Define los conceptos de cifrado simétrico y asimétrico.
+- Proporciona un ejemplo práctico de cada tipo de cifrado aplicado en sistemas operativos.
+- Simula el proceso de cifrado y descifrado de un archivo con una clave dada.
+
+---
