@@ -2267,38 +2267,74 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Inserta una memoria USB en el sistema.
 
-- Encuentra el dispositivo usando el comando:
+- Encuentra el dispositivo usando el comando `lsblk`:
 
-  ```
-  lsblk
-  ```
-
-  ```
-  fdisk -l
-  ```
+  ``` bash
+    angel@angel-virtualbox:~$ lsblk
+    NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    loop0    7:0    0     4K  1 loop /snap/bare/5
+    loop1    7:1    0  73.9M  1 loop /snap/core22/1722
+    loop2    7:2    0  74.3M  1 loop /snap/core22/1564
+    loop3    7:3    0  10.7M  1 loop /snap/firmware-updater/127
+    loop4    7:4    0 269.8M  1 loop /snap/firefox/4793
+    loop5    7:5    0 505.1M  1 loop /snap/gnome-42-2204/176
+    loop6    7:6    0  11.1M  1 loop /snap/firmware-updater/147
+    loop7    7:7    0  91.7M  1 loop /snap/gtk-common-themes/1
+    loop8    7:8    0  38.8M  1 loop /snap/snapd/21759
+    loop9    7:9    0  44.3M  1 loop /snap/snapd/23258
+    sda      8:0    0    25G  0 disk 
+    └─sda1   8:1    0    25G  0 part /
+    sdb      8:16   1   7.2G  0 disk 
+    └─sdb1   8:17   1   7.2G  0 part /media/angel/USB
+    sr0     11:0    1  1024M  0 rom
+    ```
+    En mi caso, mi usb tiene un tamaño de 7.2G y es la que aparece montada en /media/ange/USB.
+    
+    ```bash
+    sdb      8:16   1   7.2G  0 disk 
+    └─sdb1   8:17   1   7.2G  0 part /media/angel/USB
+    ```
 
 - Monta la memoria USB en un directorio, por ejemplo, `/mnt/usb`:
 
   ```
-  sudo mount /dev/sdX1 /mnt/usb
+  angel@angel-virtualbox:~$ sudo mkdir -p /mnt/usb
+  ```
+
+  ```
+  angel@angel-virtualbox:~$ sudo mount /dev/sdb1 /mnt/usb
   ```
 
 - Verifica que esté montado correctamente:
 
-  ```
-  df -h
-  ```
+    ```
+    angel@angel-virtualbox:~$ df -h
+    S.ficheros     Tamaño Usados  Disp Uso% Montado en
+    tmpfs            197M   1.3M  196M   1% /run
+    /dev/sda1         25G   8.9G   15G  39% /
+    tmpfs            985M      0  985M   0% /dev/shm
+    tmpfs            5.0M   8.0K  5.0M   1% /run/lock
+    tmpfs            197M   128K  197M   1% /run/user/1000
+    /dev/sdb1        7.2G   828K  7.2G   1% /mnt/usb
+    ```
 
 - Copia un archivo desde tu directorio personal al dispositivo USB:
 
   ```
-  cp archivo.txt /mnt/usb/
+  angel@angel-virtualbox:~$ cp pruebaUSB.txt /mnt/usb
   ```
 
+    ![alt text](image.png)
+
+    En la imagen de arriba se ve como si se copia el archivo a la USB correctamente.
+
 - Desmonta la memoria USB:
+
   ```
-  sudo umount /mnt/usb
+  angel@angel-virtualbox:~$ sudo umount /mnt/usb
   ```
+
+
 
 ### **Ejercicio 2: Redirección de Entrada y Salida**
 
@@ -2306,27 +2342,63 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Lista los archivos de tu directorio actual y guarda el resultado en un archivo `listado.txt`:
 
-  ```
-  ls -l > listado.txt
-  ```
+    ls -l > listado.txt
+  
+    ```
+    angel@angel-virtualbox:~$ ls -l > listado.txt
+    ```
+
 
 - Muestra el contenido del archivo en la terminal:
 
-  ```
-  cat listado.txt
-  ```
+    cat listado.txt
+
+    ```
+    angel@angel-virtualbox:~$ cat listado.txt
+    total 40
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:18 Descargas
+    drwxrwxr-x 2 angel angel 4096 dic 17 15:38 Desktop
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Documentos
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Imágenes
+    -rw-rw-r-- 1 angel angel    0 dic 17 15:40 listado.txt
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Música
+    drwxrwxr-x 3 angel angel 4096 dic 14 21:33 nobleNote
+    -rw-rw-r-- 1 angel angel    0 dic 12 15:17 packages.microsoft.gpg
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Plantillas
+    -rw-rw-r-- 1 angel angel    0 dic 17 15:34 pruebaUSB.txt
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Público
+    drwx------ 4 angel angel 4096 dic 12 18:11 snap
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Vídeos
+    ```
 
 - Añade la fecha actual al final del archivo:
-
-  ```
-  date >> listado.txt
-  ```
+    date >> listado.txt
+    ```
+    angel@angel-virtualbox:~$ date >> listado.txt
+    ```
 
 - Muestra todo el contenido del archivo nuevamente:
-  ```
-  cat listado.txt
-  ```
+    cat listado.txt
 
+    ```
+    angel@angel-virtualbox:~$ cat listado.txt
+    total 40
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:18 Descargas
+    drwxrwxr-x 2 angel angel 4096 dic 17 15:38 Desktop
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Documentos
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Imágenes
+    -rw-rw-r-- 1 angel angel    0 dic 17 15:40 listado.txt
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Música
+    drwxrwxr-x 3 angel angel 4096 dic 14 21:33 nobleNote
+    -rw-rw-r-- 1 angel angel    0 dic 12 15:17 packages.microsoft.gpg
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Plantillas
+    -rw-rw-r-- 1 angel angel    0 dic 17 15:34 pruebaUSB.txt
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Público
+    drwx------ 4 angel angel 4096 dic 12 18:11 snap
+    drwxr-xr-x 2 angel angel 4096 dic 12 15:08 Vídeos
+    mar 17 dic 2024 15:42:47 CST
+    ```
+    Aqui se puede ver en la ultima linea que si se muestra la fecha
 ---
 
 ### **Ejercicio 3: Copiar y Mover Archivos**
@@ -2335,46 +2407,66 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Crea un archivo de texto llamado `archivo1.txt`:
 
-  ```
-  echo "Este es un archivo de prueba" > archivo1.txt
-  ```
+    echo "Este es un archivo de prueba" > archivo1.txt
+
+    ```
+    angel@angel-virtualbox:~$ echo "Este es un archivo de prueba" > archivo1.txt
+    ```
 
 - Copia este archivo a otro directorio, por ejemplo, `/tmp`:
 
-  ```
-  cp archivo1.txt /tmp/
-  ```
+    cp archivo1.txt /tmp/
+
+    ```
+    angel@angel-virtualbox:~$ cp archivo1.txt /tmp/
+    ```
 
 - Renombra el archivo copiado a `archivo2.txt` en `/tmp`:
 
-  ```
-  mv /tmp/archivo1.txt /tmp/archivo2.txt
-  ```
+    mv /tmp/archivo1.txt /tmp/archivo2.txt
+
+    ```
+    angel@angel-virtualbox:~$ mv /tmp/archivo1.txt /tmp/archivo2.txt
+    ```
 
 - Mueve el archivo `archivo2.txt` de vuelta a tu directorio actual:
-  ```
-  mv /tmp/archivo2.txt .
-  ```
+
+    mv /tmp/archivo2.txt .
+    ```
+    angel@angel-virtualbox:~$ mv /tmp/archivo2.txt .
+    ```
+
+    ![alt text](image-2.png)
+
+    En la imagen se ven todos los archivos creados.
 
 ---
 
 ### **Ejercicio 4: Comprimir y Descomprimir Archivos**
 
-- **Objetivo**: Aprender a trabajar con compresión de archivos.
+**Objetivo**: Aprender a trabajar con compresión de archivos.
 
 - Crea un directorio llamado `backup` y copia algunos archivos en él.
+    ```
+    angel@angel-virtualbox:~$ mkdir backup
+    ```
 
 - Comprime el directorio `backup` en un archivo `.tar.gz`:
 
-  ```
-  tar -czvf backup.tar.gz backup/
-  ```
+    tar -czvf backup.tar.gz backup/
+
+    ```
+    angel@angel-virtualbox:~$ tar -czvf backup.tar.gz backup/
+    ```
+    ![alt text](image-5.png)
 
 - Borra el directorio original y extrae el contenido del archivo comprimido:
-  ```
-  tar -xzvf backup.tar.gz
-  ```
+    tar -xzvf backup.tar.gz
 
+    ```
+    angel@angel-virtualbox:~$ tar -xzvf backup.tar.gz 
+    ```
+    ![alt text](image-4.png)
 ---
 
 ### **Ejercicio 5: Permisos y Propiedades de Archivos**
@@ -2383,20 +2475,27 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Crea un archivo llamado `privado.txt`:
 
-  ```
-  touch privado.txt
-  ```
+    touch privado.txt
+
+    ```
+    angel@angel-virtualbox:~$ touch privado.txt
+    ```
 
 - Cambia los permisos del archivo para que solo el propietario pueda leer y escribir:
 
-  ```
-  chmod 600 privado.txt
-  ```
+    chmod 600 privado.txt
+
+    ```
+    angel@angel-virtualbox:~$ chmod 600 privado.txt
+    ```
 
 - Cambia el propietario del archivo a otro usuario (si tienes privilegios):
-  ```
-  sudo chown usuario privado.txt
-  ```
+
+    sudo chown usuario privado.txt
+
+    ```
+    angel@angel-virtualbox:~$ sudo chown rubi privado.txt
+    ```
 
 ---
 
@@ -2406,20 +2505,45 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Usa `lsblk` para listar los discos y particiones:
 
-  ```
-  lsblk
-  ```
+    ```
+    angel@angel-virtualbox:~$ lsblk
+    NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    loop0    7:0    0     4K  1 loop /snap/bare/5
+    loop1    7:1    0  73.9M  1 loop /snap/core22/1722
+    loop2    7:2    0  74.3M  1 loop /snap/core22/1564
+    loop3    7:3    0  10.7M  1 loop /snap/firmware-updater/127
+    loop4    7:4    0 269.8M  1 loop /snap/firefox/4793
+    loop5    7:5    0 505.1M  1 loop /snap/gnome-42-2204/176
+    loop6    7:6    0  11.1M  1 loop /snap/firmware-updater/147
+    loop7    7:7    0  91.7M  1 loop /snap/gtk-common-themes/1535
+    loop8    7:8    0  38.8M  1 loop /snap/snapd/21759
+    loop9    7:9    0  44.3M  1 loop /snap/snapd/23258
+    sda      8:0    0    25G  0 disk 
+    └─sda1   8:1    0    25G  0 part /
+    sdb      8:16   1   7.2G  0 disk 
+    └─sdb1   8:17   1   7.2G  0 part /media/angel/USB
+    sr0     11:0    1  1024M  0 rom    
+    ```
 
 - Usa `du -sh` para ver el tamaño del contenido en un directorio de tu elección:
 
-  ```
-  du -sh /ruta/directorio
-  ```
+    ```
+    angel@angel-virtualbox:~$ du -sh /media/angel/USB
+    828K    /media/angel/USB
+    ```
 
 - Verifica el uso de disco con `df -h`:
-  ```
-  df -h
-  ```
+
+    ```
+    angel@angel-virtualbox:~$ df -h
+    S.ficheros     Tamaño Usados  Disp Uso% Montado en
+    tmpfs            197M   1.3M  196M   1% /run
+    /dev/sda1         25G   9.0G   15G  39% /
+    tmpfs            985M      0  985M   0% /dev/shm
+    tmpfs            5.0M   8.0K  5.0M   1% /run/lock
+    tmpfs            197M   128K  197M   1% /run/user/1000
+    /dev/sdb1        7.2G   828K  7.2G   1% /media/angel/USB
+    ```
 
 ---
 
@@ -2429,28 +2553,140 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Identifica un disco no particionado:
 
-  ```
-  sudo fdisk -l
-  ```
+     ```
+    angel@angel-virtualbox:~$ sudo fdisk -l
+    [sudo] contraseña para angel: 
+    Disco /dev/loop0: 4 KiB, 4096 bytes, 8 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop1: 73.87 MiB, 77459456 bytes, 151288 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop2: 74.27 MiB, 77881344 bytes, 152112 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop3: 10.72 MiB, 11239424 bytes, 21952 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop4: 269.77 MiB, 282873856 bytes, 552488 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop5: 505.09 MiB, 529625088 bytes, 1034424 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop6: 11.11 MiB, 11649024 bytes, 22752 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop7: 91.69 MiB, 96141312 bytes, 187776 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/sda: 25 GiB, 26843545600 bytes, 52428800 sectores
+    Disk model: VBOX HARDDISK   
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+    Tipo de etiqueta de disco: dos
+    Identificador del disco: 0x1645d00a
+
+    Dispositivo Inicio Comienzo    Final Sectores Tamaño Id Tipo
+    /dev/sda1   *          2048 52420094 52418047    25G 83 Linux
+
+
+    Disco /dev/loop8: 38.83 MiB, 40714240 bytes, 79520 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+
+
+    Disco /dev/loop9: 44.3 MiB, 46448640 bytes, 90720 sectores
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+     ```
 
 - Usa `fdisk` para crear una nueva partición:
+    
+    ```
+    angel@angel-virtualbox:~$ sudo fdisk /dev/sdb
 
-  ```
-  sudo fdisk /dev/sdX
-  ```
+    Bienvenido a fdisk (util-linux 2.39.3).
+    Los cambios solo permanecerán en la memoria, hasta que decida escribirlos.
+    Tenga cuidado antes de utilizar la orden de escritura.
 
-- Formatea la partición como `ext4`:
+    This disk is currently in use - repartitioning is probably a bad idea.
+    It's recommended to umount all file systems, and swapoff all swap
+    partitions on this disk.
 
-  ```
-  sudo mkfs.ext4 /dev/sdX1
-  ```
 
-- Monta la partición en un directorio y prueba escribiendo archivos en ella:
-  ```
-  sudo mount /dev/sdX1 /mnt/nueva_particion
-  echo "Prueba de escritura" > /mnt/nueva_particion/test.txt
-  ```
+    Orden (m para obtener ayuda): n
 
+    Se está utilizando todo el espacio para particiones primarias.
+
+    Orden (m para obtener ayuda): p
+    Disco /dev/sdb: 7.22 GiB, 7747397632 bytes, 15131636 sectores
+    Disk model: DataTraveler 2.0
+    Unidades: sectores de 1 * 512 = 512 bytes
+    Tamaño de sector (lógico/físico): 512 bytes / 512 bytes
+    Tamaño de E/S (mínimo/óptimo): 512 bytes / 512 bytes
+    Tipo de etiqueta de disco: dos
+    Identificador del disco: 0x01d86e49
+
+    Dispositivo Inicio Comienzo    Final Sectores Tamaño Id Tipo
+    /dev/sdb1   *            63 15130079 15130017   7.2G  b W95 FAT32
+
+    Orden (m para obtener ayuda): w
+    Se ha modificado la tabla de particiones.
+    Se están sincronizando los discos.
+    ```
+
+    - Formatea la partición como `ext4`:
+
+    ```
+    angel@angel-virtualbox:~$ sudo mkfs.ext4 /dev/sdb1
+    mke2fs 1.47.0 (5-Feb-2023)
+    /dev/sdb1 contiene un sistema de ficheros vfat etiquetado 'USB'
+    ¿Continuar de todas formas? (s,N) s
+    Se está creando un sistema de ficheros con 1891252 bloques de 4k y 473280 nodos-i
+    UUID del sistema de ficheros: e0bc48eb-87c0-4556-aa91-429682f496c9
+    Respaldos del superbloque guardados en los bloques: 
+            32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+    Reservando las tablas de grupo: hecho                            
+    Escribiendo las tablas de nodos-i: hecho                            
+    Creando el fichero de transacciones (16384 bloques): hecho
+    Escribiendo superbloques y la información contable del sistema de archivos: hecho
+    ```
+
+    - Monta la partición en un directorio y prueba escribiendo archivos en ella:
+    ```
+    angel@angel-virtualbox:~$ sudo mkdir /mnt/particion
+    angel@angel-virtualbox:~$ sudo mount /dev/sdb1/ mnt/particion
+    angel@angel-virtualbox:~$ echo "Prueba de escritura" > /mnt/particion/test.txt
+    ```
 ## **Sistemas de Archivos**
 
 ### **Ejercicio 1: Concepto y Noción de Archivo Real y Virtual**
@@ -2462,6 +2698,10 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 **Archivo virtual:** El archivo virtual es un archivo que genera por el SO o por algun proceso que esta en ejecución para escribir, leer o cualquier otra operacion que el proceso necesita hacer cuando se esta ejecutando por lo que su tamaño es variado ademas de que son temporales y son eliminados cuando ya no los estan usando.Este proceso no ocupa espacio de algun dispositivo de almacenamiento y es por eso que se les dice virtual.
 
 **Proporciona ejemplos de cómo los sistemas operativos manejan archivos reales y virtuales.**
+
+Cuando descargo un juego como Minecraft el archivo se guarda en mi disco duro. el gestor del sistema que en este caso es NTFS porque estoy en windows lo que hace es que lo divide en bloques y guarda cada parte en el disco. Luego registra toda la información importante, como el nombre del archivo, su tamaño y la ubicación de esos bloques, en la Master File Table o MFT y si decidiera mover el archivo a otra carpeta el gestor actualiza esa información en la tabla para que siempre sepa dónde está y pueda abrirlo sin problemas.
+
+En los archivos virtuales Linux lo que hace es guardarlos en un directorio como el de /proc de manera temporal mientras el sistema operativo esta activo.
 
 **Explica un caso práctico donde un archivo virtual sea más útil que un archivo real.**
 
@@ -2506,6 +2746,8 @@ La tabla de abajo muestra mas metadatos que pueden usarse pero varia del sistema
 
 **Describe las ventajas y desventajas de cada sistema basado en sus componentes.**
 
+EXT4 es más sencillo y eficiente para sistemas Linux usa inodos para manejar los metadatos y los archivos además es rápido y fiable gracias a su sistema de journaling que evita problemas si el sistema falla la desventaja es que no tiene tantas funciones avanzadas como NTFS. Por otro lado NTFS que es el sistema de Windows guarda todo en la MFT que es más completa porque además de los metadatos también permite cosas como cifrado compresión y control de versiones de archivos aunque NTFS es más avanzado puede ser más pesado en cuanto a recursos y no funciona tan bien en sistemas que no son Windows así que mientras EXT4 es más ligero y directo NTFS es más completo pero también más complejo.
+
 ---
 
 ### **Ejercicio 3: Organización Lógica y Física de Archivos**
@@ -2523,7 +2765,7 @@ Crea un esquema que muestre la organización lógica y física de un sistema de 
 
 - **Proporciona un ejemplo práctico de cómo un archivo se almacena físicamente.**
 
-  Por ejemplo, cuando juegas a Left 4 Dead el juego guarda tu progreso y configuraciones en un archivo config.cfg y este archivo luego lo almacena en el disco duro en bloques que el sistema de archivos como NTFS en Windows, gestiona y despues el sistema de archivos guarda información sobre el archivo (como su ubicación y tamaño) en estructuras como la MFT en NTFS o los inodos en EXT4. Cuando guardas tu partida o cambias alguna configuración, el juego actualiza esos archivos y el sistema de archivos asigna nuevos bloques si es necesario. Si vuelves a cargar el juego, el archivo se lee y se usa para restaurar tu progreso.
+  Por ejemplo, cuando juegas a Left 4 Dead el juego guarda tu progreso y configuraciones en un archivo config.cfg y este archivo luego lo almacena en el disco duro en bloques que el sistema de archivos como NTFS en windows gestiona y despues el sistema de archivos guarda información sobre el archivo (como su ubicación y tamaño) en estructuras como la MFT en NTFS o los inodos en EXT4. Cuando guardas tu partida o cambias alguna configuración, el juego actualiza esos archivos y el sistema de archivos asigna nuevos bloques si es necesario. Si vuelves a cargar el juego, el archivo se lee y se usa para restaurar tu progreso.
 
 ---
 
@@ -2572,7 +2814,9 @@ Simula diferentes mecanismos de acceso a archivos (secuencial, directo e indexad
         ```
 3.  **Compara las ventajas de cada mecanismo dependiendo del caso de uso.**
 
+    El acceso secuencial es útil cuando se trabaja con archivos pequeños o cuando se necesita leer todo el contenido en orden ya que es simple y no requiere estructuras adicionales. Es eficiente en términos de recursos, pero no es adecuado para archivos grandes donde se busca información específica. En cambio, el acceso por índice es ideal para archivos grandes o bases de datos ya que permite encontrar rápidamente los datos sin tener que leer todo el archivo mejorando así el rendimiento en búsquedas. Por otro lado, el acceso directo por posición es perfecto cuando se necesita acceder a partes específicas de un archivo grande como en archivos binarios o bases de datos ya que permite saltar directamente a la ubicación deseada sin recorrer el archivo completo.
 ---
+
 
 ### **Ejercicio 5: Modelo Jerárquico y Mecanismos de Recuperación en Caso de Falla**
 
@@ -2581,10 +2825,15 @@ Diseña una estructura jerárquica para un sistema de archivos y simula un escen
 
 **Tareas:**
 
-- Diseña un modelo jerárquico para un sistema de archivos con al menos tres niveles de directorios.
-- Simula una falla en un directorio específico y describe los pasos necesarios para recuperarlo.
-- Explica qué herramientas o técnicas de respaldo (backup) utilizarías para evitar pérdida de datos.
+- **Diseña un modelo jerárquico para un sistema de archivos con al menos tres niveles de directorios.**
 
+- **Simula una falla en un directorio específico y describe los pasos necesarios para recuperarlo.**
+
+- **Explica qué herramientas o técnicas de respaldo (backup) utilizarías para evitar pérdida de datos.**
+
+    En mi caso, usaria servicios de almacenamiento en la nube para respaldar mis archivos en caso de que los archivos de mi PC principal fallarán ya sea por falla de disco o cualquier otro problema. Ademas de que para mi es el metodo más facil y sencillo ademas de que la mayoria de servicios tienen versiones gratis que aunque estan un poco limitadas sirven.
+
+    Sino, tambien prodria usar algun otro dispositivo de almacenamiento como otro disco o una USB para guardar los archivos que crea importantes aunque esto es muy laborioso y anticuado y la verdad prefiero la primera opcion.
 ---
 
 ## **Protección y Seguridad**
@@ -2596,9 +2845,27 @@ Investiga los conceptos de protección y seguridad en sistemas operativos. Anali
 
 **Tareas:**
 
-- Define los conceptos de protección y seguridad en el contexto de sistemas operativos.
-- Identifica los objetivos principales de un sistema de protección y seguridad, como confidencialidad, integridad y disponibilidad.
-- Da un ejemplo práctico de cómo se aplican estos objetivos en un sistema operativo.
+- **Define los conceptos de protección y seguridad en el contexto de sistemas operativos.**
+
+    **Seguridad:** La seguridad en SO se refiere a la capacidad de un sistema para proteger sus recursos y datos y funcionalidades contra amenazas internas y externas y que garantizar la integridad, disponibilidad y confidencialidad de la información.
+
+    **Proteccion:** La proteccion tiene que ver mas con los mecanismos que controlan el acceso de los procesos y usuarios a los recursos del sistema operativo.
+
+- **Identifica los objetivos principales de un sistema de protección y seguridad, como confidencialidad, integridad y disponibilidad.**
+
+    - **Confidencialidad:** Requiere que la informacion sea accesible unicamente por las entidades autorizadas.
+    - **Integridad:**  Requiere que no se la informacion se altere de forma no autorizada.
+    - **Disponibilidad:**  Requiere que los recursos del sistema estan disponibles para las entidades autorizadas cuando los necesiten.
+    - **Autenticidad:** Capacidad de verificar la autenticidad de quien en accede a losrecursos y de los recursos en sı mismos.
+    - **Control de Acceso:** Requiere que la informacion solo pueda ser accedida por las entidades autorizadas.
+
+- **Da un ejemplo práctico de cómo se aplican estos objetivos en un sistema operativo.**
+
+    Por ejemplo cuando tenemos mas de un usuario en la misma computadora, el sistema operativo separá los archivos de cada usuario para que uno no puedo acceder a los archivos del otro.
+    Asi, el sistema operativo evita que un usario no tenga acceso a cosas importantes del otro usuario o que quiera eliminar alguno de estos archivos.
+
+    Otra ejemplo es que en linux, cuando queires realizar una accion como instalar una app o borrar alguna carpeta importante se necesita la confirmacion de la contraseña del usuario para evitar que una persona
+    no deseada intente borrar esta informacion.
 
 ---
 
@@ -2609,9 +2876,12 @@ Clasifica los mecanismos de seguridad en un sistema operativo y explica cómo ca
 
 **Tareas:**
 
-- Investiga las clasificaciones comunes de la seguridad, como física, lógica y de red.
-- Explica el papel de cada clasificación en la protección de un sistema operativo.
-- Proporciona ejemplos prácticos de herramientas o técnicas utilizadas en cada clasificación.
+- **Investiga las clasificaciones comunes de la seguridad, como física, lógica y de red.**
+
+    - **Seguridad fisica:**
+    - **Seguridad lógica**
+- **Explica el papel de cada clasificación en la protección de un sistema operativo.**
+- **Proporciona ejemplos prácticos de herramientas o técnicas utilizadas en cada clasificación.**
 
 ---
 
@@ -2622,9 +2892,9 @@ Analiza las funciones que cumple un sistema de protección en un entorno multius
 
 **Tareas:**
 
-- Describe cómo un sistema de protección controla el acceso a los recursos.
-- Explica las funciones principales como autenticación, autorización y auditoría.
-- Diseña un caso práctico donde se muestren las funciones de un sistema de protección en acción.
+**Describe cómo un sistema de protección controla el acceso a los recursos.**
+**Explica las funciones principales como autenticación, autorización y auditoría.**
+**Diseña un caso práctico donde se muestren las funciones de un sistema de protección en acción.**
 
 ---
 
