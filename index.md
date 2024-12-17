@@ -2267,7 +2267,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 - Inserta una memoria USB en el sistema.
 
-- Encuentra el dispositivo usando el comando `lsblk`:
+- Encuentra el dispositivo usandos el comando `lsblk`:
 
   ``` bash
     angel@angel-virtualbox:~$ lsblk
