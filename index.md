@@ -2765,8 +2765,7 @@ Crea un esquema que muestre la organización lógica y física de un sistema de 
 
 - **Proporciona un ejemplo práctico de cómo un archivo se almacena físicamente.**
 
-  Por ejemplo, cuando juegas a Left 4 Dead el juego guarda tu progreso y configuraciones en un archivo config.cfg y este archivo luego lo almacena en el disco duro en bloques que el sistema de archivos como NTFS en windows gestiona y despues el sistema de archivos guarda información sobre el archivo (como su ubicación y tamaño) en estructuras como la MFT en NTFS o los inodos en EXT4. Cuando guardas tu partida o cambias alguna configuración, el juego actualiza esos archivos y el sistema de archivos asigna nuevos bloques si es necesario. Si vuelves a cargar el juego, el archivo se lee y se usa para restaurar tu progreso.
-
+  Por ejemplo, los videojuegos normalmente suelen guardar el progreso y configuraciones en archivos que luego son almacenados en el disco duro archivo luego lo almacena en el disco duro. En windows el sistema de archivos es el NTFS y es el que se encarga de guardar la informacion del archivo como la ubicacion y el tamaño entonces cuando vuelves a abrir el juego y a cargar la partida el sistema de archivos se encarga de recuperar ese archivo y tambien cuando se vuelve a guardar una partida el sistema tambien actualiza esos archivos y asigna nuevos bloques si es mas grande.
 ---
 
 ### **Ejercicio 4: Mecanismos de Acceso a los Archivos**
@@ -2877,11 +2876,30 @@ Clasifica los mecanismos de seguridad en un sistema operativo y explica cómo ca
 **Tareas:**
 
 - **Investiga las clasificaciones comunes de la seguridad, como física, lógica y de red.**
+    - **Seguridad fisica:** Esta hace referencia a las medidas para proteger al los sistemas operativos de las amenazas fisicas. 
+ 
+    - **Seguridad lógica:** La seguridad logica se enfoca más en las medidas que se toman para controlar el acceso a los sistemas informaticos y a sus recursos y de esta manera evitar accesos no autorizados.
+    - **Seguridad de red:** Esta hace referencia a las medidas que se toman para proteger la infraestructura de una red y los dispositivos que estan conectados a ella para evitar amenazas como virus, troyanos, etc.
 
-    - **Seguridad fisica:**
-    - **Seguridad lógica**
 - **Explica el papel de cada clasificación en la protección de un sistema operativo.**
+
+    La primera proteccion que es la **seguridad fisica** tiene el papel de la seguridad del SO a nivel fisico como puede ser tener guardias de seguridad que eviten que personas no autorizadas accedan a la computadora que tiene este SO. Después la **seguridad logica** es la encargada de proteger el SO a nivel mas de software por ejemplo al solicitar contraseñas al acceder a un usuario del SO, al encriptar los datos del disco duro, de realizar scanners de virus,etc. Por ultimo la **seguridad de red** es la que se encarga de proteger la red a la que el SO esta conectada y evitar que el SO corra peligro al estar conectada a esta red. 
+
 - **Proporciona ejemplos prácticos de herramientas o técnicas utilizadas en cada clasificación.**
+
+    **Seguridad fisica**
+
+    El la seguridad fisica hay USP o nobreaks que sirven para que proteger a lascomputadoras de los apagones electricos yque los dispositivos no se dañen y estoayuda a que no se dañe el SO y no sepierda informacion.
+
+    Tambien puede ser el uso de accesosbiometricos a edificos para que no entrenpersonas que no trabajan en esos lugares.
+
+    **Seguridad logica**
+
+    En esta seguridad hay software que ayudaa analizar el SO en busca de amenzas comolos antivirus. 
+    Tambien hay herramientas que ayudan acifrar archivos para que no sean tanvulnerables o tambien servicios queayudan a realizar copias de seguridad delos archivos para que estos no seeliminen si pasa algo.
+
+    **Seguridad de red**
+    Aqui hay herramientas como el firewall que controla el trafico de la red y ayuda a que sea mas seguro, tambien hay protocolos como el HTTPS que tambien ayudan a ser mas seguras las paginas web que visitamos.
 
 ---
 
@@ -2893,8 +2911,24 @@ Analiza las funciones que cumple un sistema de protección en un entorno multius
 **Tareas:**
 
 **Describe cómo un sistema de protección controla el acceso a los recursos.**
+
+Uno de los mecanismos que se usan es el de Autentificacion de usuarios en la que el cada usuario tiene su usuario y contraseña. Esto ayuda a que la informacion de cada usuario no se mezcle y este protegida.
+
+Otra forma que tienen el SO para controlar estos recursos es mediante el control de acceso o ACL en el cual se determina que usuarios o que procesos tienen acceso a recursos del sistema
+
+Tambien el uso de privilegios es otra forma en la que el SO controla los accesos ya que dependiendo del privilegio del usuario puede realizar o no ciertas acciones como en el caso de LINUX que solo puedes instalar aplicaciones si eres superusuario. De esta manera el SO previene que usuarios no autorizados realicen acciones importantes.
+
 **Explica las funciones principales como autenticación, autorización y auditoría.**
+
+- **autentificacion:** Es cuando el sistema se asegura de que eres quien dices ser, generalmente pidiendo tu usuario y contraseña. Así protege la información y evita que alguien más acceda a tus cosas.
+
+- **autorizacion:** La autorizacion es la que se encarga de decidir que acciones o recursos estan disponibles para cada usuario. Esto se maneja con cosas como listas de control de acceso (ACL) o privilegios y de esta manera evita que alguien haga algo que no debería.
+
+- **auditoria:** 
+
 **Diseña un caso práctico donde se muestren las funciones de un sistema de protección en acción.**
+
+En el caso de LINUX cuando inicias el sistema operativo te muestra los usuarios que hay guardados y te da a elegir cual usar para que uses su respectiva contraseña. Una vez que ya estas dentro si quieres instalar una aplicacion desde la terminal o ejecutar algun comando especial no te deja si no tienes los privilegios o permisos adecuados. Por ejemplo, si quieres instalar una app te no te deja si no usas el sudo ademas de que te vuelve a pedir que confirmes la contraseña para instalarla.
 
 ---
 
@@ -2906,7 +2940,9 @@ Crea e implementa una matriz de acceso para un sistema que contiene usuarios y r
 **Tareas:**
 
 - Diseña una matriz de acceso para un sistema con al menos 3 usuarios y 4 recursos.
+
 - Explica cómo esta matriz se utiliza para controlar el acceso en un sistema operativo.
+
 - Simula un escenario donde un usuario intenta acceder a un recurso no permitido y cómo la matriz lo bloquea.
 
 ---
@@ -2918,8 +2954,17 @@ Investiga cómo los lenguajes de programación pueden implementar mecanismos de 
 
 **Tareas:**
 
-- Explica el concepto de protección basada en el lenguaje.
-- Proporciona un ejemplo de cómo un lenguaje como Java o Rust asegura la memoria y evita accesos no autorizados.
+- **Explica el concepto de protección basada en el lenguaje.**
+
+    La proteccion basado en el lenguaje se refiere a las tecnicas o macanismos que se implementan a nivel del lenguaje al momento de desarrollar una aplicacion. Estas tecnicas ayudan a evitar vulnerabilidades controlando cómo se manejan los datos, cómo se usa la memoria y cómo se accede a los recursos del sistema.
+
+- **Proporciona un ejemplo de cómo un lenguaje como Java o Rust asegura la memoria y evita accesos no autorizados.**
+
+    En java, se tiene el control de tipos que basicamente sirve para que controlar que solo se puedan asignar valores del mismo tipo de la variable y esto ayuda a que no se usen valores en tipos de datos incorrectos lo evita que existan mas vulnerabilidades.
+    Ademas tambien tienen los modificadores de acceso como el private o el protect que evitan que los datos datos y variables del programa sean modificados de manera no autorizada.
+
+
+
 - Compara este enfoque con otros mecanismos de protección en sistemas operativos.
 
 ---
@@ -2932,7 +2977,32 @@ Analiza las principales amenazas a un sistema operativo y los mecanismos de vali
 **Tareas:**
 
 - Investiga y describe al menos tres tipos de amenazas comunes (por ejemplo, malware, ataques de fuerza bruta, inyección de código).
+
+    **Spyware**: Este es un malware que se instala en las computadoras sin que el dueño del equipo sea conciente. Una vez que el programa se instala lo que hace es recopilar la informacion de esa computadora y la envia a terceros. Este tipo de malware es muy peligroso porque puede robar informacion muy sensible como numeros de tarjetas y contraseñas, ademas de que es muy dificil de detectar ya que no son visibles para el usuario al correr normalmente en segundo plano ademas de ser bastante facil el infectarse de ellos ya que suelen instalarse junto con otros programas, al descargar archivos de la web, etc.
+
+    Estos spyware se suelen clasificar en varias categorias como:
+    - *Keylogger*: Este tipo lo que hace es registrar las teclas que son pulsadas por el usuario y las envia a terceros como puede ser un servidor. Normalmente son usados para conseguir las contraseñas de sitios web de la persona o de sus tarjetas bancarias.
+    - *Adware*: El adware lo que hace es mostrar anuncios al usuario basado en su informacion del ordenador. 
+    - *InfoStealers*: Los infoStealers son los que recolectan la informacion del dispositivo y lo envian a terceros.
+
+    
+    **Ataques de fuerza bruta:** Este es un ataque que los hackers usan para conseguir contraseñas. Se les dice de fuerza bruta porque lo que hacen es realizar varios intentos de ensayo y error para decifrar la contraseña a la que quieren acceder hasta que lo logran. La manera en la que estos ataques funcionan es que el hacker mediante su computadora va probando miles de combinaciones de contraseñas y usuarios hasta que una sea la correcta.
+
+    **Ransomeware:** El ransomeware es un malware que lo que hace es secuestrar la informacion del usuario al que infecto y extorcionar a las personas para liberar esta informacion. Normalmente esta extorsión suelen ser pagos de dinero. 
+
+    Estos ransomeware se pueden clasificar según sus metodos y maneras de extorsion. Algunos de estos son:
+    - *Ransomeware de cifrado:* Este es el mas común y lo que hace es usar tecnicas para encriptar los archivos del usuario y que de esta manera no pueda acceder a ellos a menos que pague y le den la llave para desencriptar.
+
+    - *Ransomeware de pantalla de bloqueo:*Este es mas viejo y menos usado pero aun se usa y lo que hace es bloquear la pantalla de acceso de la computadora y no deja entrar al usuario hasta que se pague. Esta forma es mas facil de eliminar y la que menos daño hace y es por eso que ya no la usan tanto.
+
+
+
 - Explica los mecanismos de validación como autenticación multifactor y control de integridad.
+
+    **Autentificacion multifactor:** La autenficiacion multifactor lo que hace es comprobar varias aspectos o factores del usuario antes de que se le de acceso. Por ejemplo, hay servicios que te pide aparte de tu usuario y contraseña el numero de telefono para comprobar que efectivamente eres tu o te piden que contestes informacion que solo tu conoces como el nombre de tu mascota. Este metodo ayuda bastante ya que le añade mas seguridad a las cuentas ya que ahora se evaluan multiples factores en lugar de solo el usuario la contraseña.
+
+    **Control de integridad:** Este mecanismo lo que hace es asegurar que los archivos y datos del sistema no hayan sido alterados de manera no autorizada. Si un archivo se modifica sin los permisos adecuados el control de integridad lo detecta. Esto se puede hacer mediante el uso de sumas de verificación o hashing que básicamente generan un valor único para cada archivo o conjunto de datos y si el archivo cambia de alguna manera el valor generado también cambia. Lo que indica que algo ha sido alterado. Esto ayuda a prevenir ataques como la inyección de código o modificaciones maliciosas a los archivos del sistema.
+
 - Diseña un esquema de validación para un sistema operativo con múltiples usuarios.
 
 ---
