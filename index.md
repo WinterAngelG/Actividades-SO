@@ -2964,7 +2964,7 @@ Investiga cómo los lenguajes de programación pueden implementar mecanismos de 
     Ademas tambien tienen los modificadores de acceso como el private o el protect que evitan que los datos datos y variables del programa sean modificados de manera no autorizada.
 
 
-
+s
 - Compara este enfoque con otros mecanismos de protección en sistemas operativos.
 
 ---
