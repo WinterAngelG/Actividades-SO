@@ -1,4 +1,4 @@
-# _Sistemas operativo_
+<h1 style="text-align: center;">Actividades de Sistemas Operativos</h1>
 
 ### **Alumno: Gutierrez Ortiz Angel Yahir**
 
@@ -6,9 +6,16 @@
 
 ### **Número de control: 22121318**
 
----
+<h2 style="text-align: center;">Indice de actividades</h2>
 
-## **Administración de Memoria**
+1. [Administracion de memoria](#administracion_memoria)
+2. [Administración de Entrada/Salida](#administracion_ES)
+3. [Dispositivos de entrada y salida en Linux](#dispositivos_ES)
+4. [Comandos de Entrada y Salida, Discos y Archivos](#comandos)
+5. [Sistemas de Archivos](#sistemas_archivos)
+6. [Protección y Seguridad](#proteccion_seguridad)
+
+<h2 id="administracion_memoria" style="text-align: center; border-bottom: none;">Administracion de memoria</h2>
 
 ### **3.1 Política y filosofía**
 
@@ -130,7 +137,7 @@ Ademas, no puede ocurrir fragmentación externa en la paginación porque los blo
 
    void eliminarProceso(int length, nodo particiones[])
    {
-       int memoriaLibre = 1;
+       int memoriaLibre = 1;F
        for (int i = 0; i < length; i++)
        {
            if (particiones[i].id != -1)
@@ -264,6 +271,8 @@ Ademas, no puede ocurrir fragmentación externa en la paginación porque los blo
         Si está ocupada, seguir buscando.
     8. Si no hay ningún bloque con el espacio disponible, no cargar el proceso.
     9. FIN
+
+---
 
 ### **3.3 Organización de memoria virtual**
 
@@ -533,6 +542,7 @@ La principal desventaja de la segmentación es que puede generar fragmentación 
         return 0;
     }
 ```
+---
 
 ### **3.4 Administración de memoria virtual**
 
@@ -803,6 +813,8 @@ int main()
 
 ![alt text](imagenes/image-6.png)
 
+---
+
 ### **Integración**
 
 #### **1. Analiza un sistema operativo moderno (por ejemplo, Linux o Windows) e identifica cómo administra la memoria virtual.**
@@ -1016,7 +1028,9 @@ int main()
 
 ```
 
-## **Administración de Entrada/Salida**
+---
+
+<h2 id="administracion_ES" style="text-align: center; border-bottom: none;">Administración de Entrada/Salida</h2>
 
 ### **4.1 Dispositivos y manejadores de dispositivos**
 
@@ -1182,6 +1196,7 @@ int main() {
 }
 ```
 
+---
 ### **4.2 Mecanismos y funciones de los manejadores de dispositivos**
 
 #### **1. Investiga qué es la interrupción por E/S y cómo la administra el sis tema operativo. Escribe un ejemplo en pseudocódigo para simular este proceso..**
@@ -1457,6 +1472,7 @@ int main()
 }
 ```
 
+---
 ### **4.3 Estructuras de datos para manejo de dispositivos**
 
 #### **1. Investiga y explica qué es una cola de E/S. Diseña una simulación de una cola con prioridad.**
@@ -1650,6 +1666,7 @@ int main() {
 
 ```
 
+---
 ### **4.4 Operaciones de Entrada/Salida**
 
 #### **1. Diseña un flujo que describa el proceso de lectura de un archivo desde un disco magnético. Acompáñalo con un programa básico que simule el proceso.**
@@ -1659,13 +1676,303 @@ int main() {
 Cuando un proceso necesita leer un archivo desde un disco magnético, el sistema operativo tiene que hacer varias cosas. Primero, recibe la solicitud para leer el archivo y comienza a buscarlo en el disco. Una vez que lo encuentra, tiene que mover la cabeza de lectura del disco a la pista donde está el archivo. Después, los datos del archivo se leen en bloques, que son las pequeñas unidades en las que se guarda todo en el disco. Estos bloques se ponen en una especie de memoria temporal llamada búfer y después se pasan al proceso que pidió los datos. Al final, el sistema operativo actualiza lo que tenga que actualizar y libera los recursos que usó durante todo este proceso. Todo esto se hace para que los datos puedan ser leídos correctamente y estén listos para el proceso que los necesita.
 
 #### **2. Implementa un programa en Python, C o java que realice operaciones de entrada/salida asíncronas usando archivos.**
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>  
+
+#define MAX_BUFFER 1024
+#define FILE_NAME "simulated_file.txt"
+
+char dataBuffer[MAX_BUFFER];
+
+DWORD WINAPI asyncWrite(LPVOID param) {
+    FILE* file = fopen(FILE_NAME, "w");  
+    if (file == NULL) {
+        perror("Error al abrir el archivo para escritura");
+        return 1;
+    }
+
+    strcpy(dataBuffer, "Esta es una prueba de escritura asincrona.");
+    printf("Iniciando escritura asincrona... escribiendo en el archivo: %s\n", dataBuffer);
+
+    Sleep(2000); 
+
+    fprintf(file, "%s\n", dataBuffer);
+    fclose(file);
+
+    printf("Escritura completada.\n");
+    return 0;
+}
+
+DWORD WINAPI asyncRead(LPVOID param) {
+    FILE* file = fopen(FILE_NAME, "r");  
+    if (file == NULL) {
+        perror("Error al abrir el archivo para lectura");
+        return 1;
+    }
+
+    Sleep(1000);  
+
+    printf("Iniciando lectura asincrona... leyendo desde el archivo...\n");
+    fgets(dataBuffer, MAX_BUFFER, file);
+    fclose(file);
+
+    printf("Lectura completada. Contenido leído: %s\n", dataBuffer);
+    return 0;
+}
+
+int main() {
+    HANDLE readThread, writeThread;
+
+    writeThread = CreateThread(NULL, 0, asyncWrite, NULL, 0, NULL);
+    if (writeThread == NULL) {
+        perror("Error al crear el hilo de escritura");
+        return 1;
+    }
+
+    readThread = CreateThread(NULL, 0, asyncRead, NULL, 0, NULL);
+    if (readThread == NULL) {
+        perror("Error al crear el hilo de lectura");
+        return 1;
+    }
+
+    WaitForSingleObject(writeThread, INFINITE);
+    WaitForSingleObject(readThread, INFINITE);
+
+    CloseHandle(writeThread);
+    CloseHandle(readThread);
+
+    return 0;
+}
+```
 
 ### **Integración**
 
 #### **1. Escribe un programa que implemente el algoritmo de planificación de discos "Elevator (SCAN)".**
+```c
+#include <stdio.h>
+#include <stdlib.h>
 
+int comparar(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
+
+void algoritmo_SCAN(int pedidos[], int num_pedidos, int posicion_inicial, int tamano_disco, int sentido) {
+    int total_movimiento = 0; 
+    int distancia, posicion_actual;
+    int menores[posicion_inicial], mayores[num_pedidos - posicion_inicial];
+    int contador_menores = 0, contador_mayores = 0;
+
+    for (int i = 0; i < num_pedidos; i++) {
+        if (pedidos[i] < posicion_inicial) {
+            menores[contador_menores++] = pedidos[i];
+        } else {
+            mayores[contador_mayores++] = pedidos[i];
+        }
+    }
+
+    qsort(menores, contador_menores, sizeof(int), comparar);
+    qsort(mayores, contador_mayores, sizeof(int), comparar);
+
+    printf("Secuencia de acceso a los cilindros: ");
+
+    if (sentido == 1) {
+        for (int i = 0; i < contador_mayores; i++) {
+            posicion_actual = mayores[i];
+            printf("%d ", posicion_actual);
+            distancia = abs(posicion_actual - posicion_inicial);
+            total_movimiento += distancia;
+            posicion_inicial = posicion_actual;
+        }
+
+        if (posicion_inicial != tamano_disco - 1) {
+            printf("%d ", tamano_disco - 1);
+            total_movimiento += abs(tamano_disco - 1 - posicion_inicial);
+            posicion_inicial = tamano_disco - 1;
+        }
+
+        for (int i = contador_menores - 1; i >= 0; i--) {
+            posicion_actual = menores[i];
+            printf("%d ", posicion_actual);
+            distancia = abs(posicion_actual - posicion_inicial);
+            total_movimiento += distancia;
+            posicion_inicial = posicion_actual;
+        }
+    } else {
+        for (int i = contador_menores - 1; i >= 0; i--) {
+            posicion_actual = menores[i];
+            printf("%d ", posicion_actual);
+            distancia = abs(posicion_actual - posicion_inicial);
+            total_movimiento += distancia;
+            posicion_inicial = posicion_actual;
+        }
+
+        if (posicion_inicial != 0) {
+            printf("0 ");
+            total_movimiento += posicion_inicial;
+            posicion_inicial = 0;
+        }
+
+        for (int i = 0; i < contador_mayores; i++) {
+            posicion_actual = mayores[i];
+            printf("%d ", posicion_actual);
+            distancia = abs(posicion_actual - posicion_inicial);
+            total_movimiento += distancia;
+            posicion_inicial = posicion_actual;
+        }
+    }
+
+    printf("\nMovimiento total del cabezal: %d cilindros\n", total_movimiento);
+}
+
+int main() {
+    int num_pedidos, posicion_inicial, tamano_disco, sentido;
+
+    printf("Introduce el numero de solicitudes de cilindros: ");
+    scanf("%d", &num_pedidos);
+
+    int pedidos[num_pedidos];
+    printf("Introduce las solicitudes de cilindros:\n");
+    for (int i = 0; i < num_pedidos; i++) {
+        scanf("%d", &pedidos[i]);
+    }
+
+    printf("Introduce la posicion inicial del cabezal: ");
+    scanf("%d", &posicion_inicial);
+
+    printf("Introduce el tamanio del disco (numero total de cilindros): ");
+    scanf("%d", &tamano_disco);
+
+    printf("Introduce la direccion inicial (0 -> abajo, 1 -> arriba): ");
+    scanf("%d", &sentido);
+
+    algoritmo_SCAN(pedidos, num_pedidos, posicion_inicial, tamano_disco, sentido);
+
+    return 0;
+}
+
+```
 #### **2. Diseña un sistema que maneje múltiples dispositivos simulados (disco duro, impresora, teclado) y muestra cómo se realiza la comunicación entre ellos.**
+```c
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <unistd.h>
 
+#define MAX_SIZE 256
+
+typedef struct StorageDevice {
+    char content[MAX_SIZE];
+} StorageDevice;
+
+typedef struct PrinterDevice {
+    bool isOpen;
+    char buffer[MAX_SIZE];
+} PrinterDevice;
+
+typedef struct InputDevice {
+    char data[MAX_SIZE];
+} InputDevice;
+
+StorageDevice hardDrive;
+PrinterDevice printer;
+InputDevice keyboard;
+
+void openPrinterDevice();
+void writeToPrinterBuffer(const char *text);
+void closePrinterDevice();
+void readPrinterBuffer();
+void initializeSystem();
+void writeToStorage();
+void readFromKeyboard();
+void readFromStorage();
+
+void openPrinterDevice() {
+    if (!printer.isOpen) {
+        printer.isOpen = true;
+        printf("Iniciando la impresora...\n");
+        sleep(1);
+        printf("La impresora ahora está lista para usar.\n");
+    } else {
+        printf("La impresora ya está activa.\n");
+    }
+}
+
+void readPrinterBuffer() {
+    if (printer.isOpen) {
+        printf("Accediendo al contenido del buffer de la impresora...\n");
+        sleep(1);
+        if (strlen(printer.buffer) > 0) {
+            printf("Contenido actual del buffer: %s\n", printer.buffer);
+        } else {
+            printf("El buffer de la impresora está vacío.\n");
+        }
+    } else {
+        printf("No se puede acceder al buffer, la impresora está apagada.\n");
+    }
+}
+
+void writeToPrinterBuffer(const char *text) {
+    if (printer.isOpen) {
+        printf("Guardando datos en el buffer de la impresora...\n");
+        sleep(1);
+        strncpy(printer.buffer, text, MAX_SIZE - 1);
+        printer.buffer[MAX_SIZE - 1] = '\0';
+        printf("Datos guardados con éxito en el buffer.\n");
+    } else {
+        printf("No se puede escribir, la impresora está apagada.\n");
+    }
+}
+
+void closePrinterDevice() {
+    if (printer.isOpen) {
+        printf("Apagando la impresora...\n");
+        sleep(2);
+        printer.isOpen = false;
+        printf("La impresora ha sido apagada.\n");
+    } else {
+        printf("La impresora ya estaba apagada.\n");
+    }
+}
+
+void readFromKeyboard() {
+    printf("Por favor, ingresa un texto: ");
+    fgets(keyboard.data, MAX_SIZE, stdin);
+}
+
+void writeToStorage() {
+    strcpy(hardDrive.content, keyboard.data);
+    printf("Texto guardado en el almacenamiento: %s\n", hardDrive.content);
+}
+
+void readFromStorage() {
+    strcpy(printer.buffer, hardDrive.content);
+    printf("Contenido recuperado del almacenamiento para impresión: %s\n", printer.buffer);
+}
+
+void initializeSystem() {
+    memset(&hardDrive, 0, sizeof(hardDrive));
+    memset(&printer, 0, sizeof(printer));
+    memset(&keyboard, 0, sizeof(keyboard));
+    printer.isOpen = false;
+}
+
+int main() {
+    initializeSystem();
+    
+    openPrinterDevice();
+    readFromKeyboard();
+    writeToStorage();
+    readFromStorage();
+    writeToPrinterBuffer(printer.buffer);
+    readPrinterBuffer();
+    closePrinterDevice();
+
+    return 0;
+}
+```
 ### **Avanzados**
 
 #### **1. Explica cómo los sistemas operativos modernos optimizan las operaciones de entrada/salida con el uso de memoria caché.**
@@ -1679,7 +1986,10 @@ La forma en la que los sistmeas operativos usan esta memoria es mas que nada com
 En cuanto a los dispositivos de E/S SO puede guarda tambien las instrucciones mas comunes de los dispositivos, las instrucciones de los drivers, para guardar las paginas de memoria que mas se usan, etc.
 Por ejemplo, si un programa necesita leer datos secuenciales de un archivo grande, el driver de E/S puede predecir que se solicitarán más bloques de datos a medida que el archivo se lee, por lo que carga los bloques en la caché para reducir los tiempos de acceso lo que optimiza bastante las operaciones de lectura y escritura en los SO.
 
-## **Actividades: Dispositivos de entrada y salida en Linux**
+---
+
+<h2 id="dispositivos_ES" style="text-align: center; border-bottom: none;"> Dispositivos de entrada y salida en Linux</h2>
+
 
 ### **Actividad 1: Listar dispositivos conectados**
 
@@ -1785,6 +2095,7 @@ con la palabra de sudo antes del comando y ya pude hacer que me mostrará la inf
 
   **RESPUESTA:** Este comando te da más detalles sobre lo que pasa con los dispositivos USB en el sistema, como si conectaste o desconectaste algo.Sirve mucho para ver si un dispositivo lo reconoce o no el sustema. Por ejemplo, intenté meter una USB, pero la VM no la registró, y al usar este comando confirmé que el kernel no detectó ningún evento relacionado con la USB. Así que claramente no pasó nada en la VM.
 
+---
 ### **Actividad 2: Verificar dispositivos de almacenamiento**
 
 1. Use el comando `fdisk -l` para listar todos los discos y particiones.
@@ -1897,6 +2208,7 @@ tmpfs            197M   124K  197M   1% /run/user/1000
 
   **RESPUESTA:** En la partición principal /dev/sda1 el sistema de archivos es de tipo ext4.
 
+---
 ### **Actividad 3: Explorar dispositivos de entradas**
 
 1. Ejecute `cat /proc/bus/input/devices` para listar los dispositivos de entrada.
@@ -2006,6 +2318,7 @@ angel@angel-virtualbox:~$
 
   **RESPUESTA:** Los dispositivos se identifican con varias cosas que te ayudan a entender qué es cada uno. Primero, está el tipo de conexión, como si es interno o USB. También tienen un nombre que describe qué son, como "AT Translated Set 2 keyboard" para el teclado. Luego, vienen con un identificador del fabricante y modelo, y algo llamado "Handlers", que básicamente es lo que maneja los eventos del dispositivo, por ejemplo, kbd para el teclado o mouse para el ratón. Otra cosa interesante es que te dice cómo están conectados físicamente al sistema, aunque en mi caso, como es una máquina virtual, muchas cosas son emuladas.
 
+---
 ### **Actividad 4: Examinar dispositivos de salida**
 
 1. Use `xrandr` para listar las pantallas conectadas y sus resoluciones.
@@ -2076,6 +2389,7 @@ wireplumb 1188 angel   36u   CHR  116,5      0t0  665 /dev/snd/controlC0
 
   **RESPUESTA:** Cuando ejecute el comando de lsof /dev/snd/\* aparecian dos procesos utilizando la tarjeta de sonido. El primero es pipewire con el PID 1185 y el otro wireplumb con el PID 1188.
 
+---
 ### **Actividad 5: Crear un script de resumen**
 
 1. Cree un archivo llamado `dispositivos.sh` y agregue el siguiente contenido: `bash #!/bin/bash echo "Dispositivos de bloque:" lsblk echo "Dispositivos USB:" lsusb echo "Dispositivos PCI:" lspci echo "Dispositivos de entrada:" cat /proc/bus/input/devices echo "Salidas de video:" xrandr echo "Tarjetas de sonido:" aplay -l `
@@ -2243,6 +2557,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
 
 **RESPUESTA:**
 
+---
 ### **Actividad 6: Reflexión y discusión**
 
 1. Reflexione sobre lo aprendido y discuta en equipo:
@@ -2256,10 +2571,13 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
   **RESPUESTA:** Es bastante importante saber qué dispositivos están conectados, porque si algo falla o si quiero agregar nuevo hardware, necesito estar seguro de qué tengo y cómo está configurado. Si no sé qué dispositivos tengo, no voy a poder solucionar problemas de almacenamiento o conectividad que puedan surgin. Además, con esta información, puedo evitar conflictos entre dispositivos.
 
 - **¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?**
+    Podemos usar estos comandos para asegurarnos de que todos los discos duros del SO esten trabajando correctamente, tambien para saber mas informacion acerca de los dispositivos de E/S de nuestro sistema como su numero de serie, en que puerto estan conectados, entre otras funciones que ayudan bastante a conocer y entender mas acerca del SO en el que estamos trabajando.
 
 **RESPUESTA:**
 
-## **Comandos de Entrada y Salida, Discos y Archivos**
+---
+
+<h2 id="comandos" style="text-align: center; border-bottom: none;"> Comandos de Entrada y Salida, Discos y Archivos</h2>
 
 ### **Ejercicio 1: Montar y Desmontar Discos**
 
@@ -2324,7 +2642,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
   angel@angel-virtualbox:~$ cp pruebaUSB.txt /mnt/usb
   ```
 
-    ![alt text](image.png)
+    ![alt text](imagenes/image-111.png)
 
     En la imagen de arriba se ve como si se copia el archivo a la USB correctamente.
 
@@ -2436,7 +2754,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
     angel@angel-virtualbox:~$ mv /tmp/archivo2.txt .
     ```
 
-    ![alt text](image-2.png)
+    ![alt text](imagenes/image-12.png)
 
     En la imagen se ven todos los archivos creados.
 
@@ -2458,7 +2776,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
     ```
     angel@angel-virtualbox:~$ tar -czvf backup.tar.gz backup/
     ```
-    ![alt text](image-5.png)
+    ![alt text](imagenes/image-15.png)
 
 - Borra el directorio original y extrae el contenido del archivo comprimido:
     tar -xzvf backup.tar.gz
@@ -2466,7 +2784,7 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
     ```
     angel@angel-virtualbox:~$ tar -xzvf backup.tar.gz 
     ```
-    ![alt text](image-4.png)
+    ![alt text](imagenes/image-14.png)
 ---
 
 ### **Ejercicio 5: Permisos y Propiedades de Archivos**
@@ -2687,7 +3005,9 @@ tarjeta 0: I82801AAICH [Intel 82801AA-ICH], dispositivo 0: Intel ICH [Intel 8280
     angel@angel-virtualbox:~$ sudo mount /dev/sdb1/ mnt/particion
     angel@angel-virtualbox:~$ echo "Prueba de escritura" > /mnt/particion/test.txt
     ```
-## **Sistemas de Archivos**
+---
+
+<h2 id="sistemas_archivos" style="text-align: center; border-bottom: none;">Sistemas de Archivos</h2>
 
 ### **Ejercicio 1: Concepto y Noción de Archivo Real y Virtual**
 
@@ -2723,7 +3043,7 @@ Los componentes de un sistema de archivos son:
 - **Archivos**: Es una coleccion de datos que contiene informacion.
 - **Directorios**: Es un contenedor que guarda archivos y otros directorios y sirve para organizar los archivos.
 
-  ![alt text](image-2.png)
+  ![alt text](imagenes/directorio.png)
 
 **Tabla de asignación de bloques**: Esta es una estructura que rastrea qué bloques en el dispositivo de almacenamiento están ocupados y cuáles están libres.
 
@@ -2731,7 +3051,7 @@ Los componentes de un sistema de archivos son:
 
 La tabla de abajo muestra mas metadatos que pueden usarse pero varia del sistema de archivos si valen o no.
 
-![alt text](image.png)
+![alt text](imagenes/tabla.png)
 
 - **Operaciones del sistema de archivo**: Son la acciones que pueden realizarse en los archivos y directirios. Algunas de las operaciones son: crear, mover, copiar, eliminar, renombrar, etc.
 
@@ -2832,18 +3152,31 @@ Diseña una estructura jerárquica para un sistema de archivos y simula un escen
 
 - **Diseña un modelo jerárquico para un sistema de archivos con al menos tres niveles de directorios.**
 
-![alt text](<Copia de Diagrama en blanco(1).png>)
+![alt text](imagenes/diagrama%20de%203%20niveles.png)
 
 - **Simula una falla en un directorio específico y describe los pasos necesarios para recuperarlo.**
+    Por ejemplo, si la falla del directorio fuera por que se corrompio lo que haria seria lo siguiente:
+
+    1. Verificar que el directorio si este dañado.
+
+    2. Usar alguna herramienta externa o interna de SO para reparar el sistema o el disco e intentar restaurar ese directorio
+    
+    3. Si no sirven el paso anterior, lo que haría seria restaurar el sistema con alguna copia de seguridad que el sistema haya creado previamente.
+
+    4. Ya que se haya restaurado la copia de seguridad verificaria si ya puedo acceder al directorio.
+
 
 - **Explica qué herramientas o técnicas de respaldo (backup) utilizarías para evitar pérdida de datos.**
 
     En mi caso, usaria servicios de almacenamiento en la nube para respaldar mis archivos en caso de que los archivos de mi PC principal fallarán ya sea por falla de disco o cualquier otro problema. Ademas de que para mi es el metodo más facil y sencillo ademas de que la mayoria de servicios tienen versiones gratis que aunque estan un poco limitadas sirven.
 
     Sino, tambien prodria usar algun otro dispositivo de almacenamiento como otro disco o una USB para guardar los archivos que crea importantes aunque esto es muy laborioso y anticuado y la verdad prefiero la primera opcion.
+
 ---
 
-## **Protección y Seguridad**
+<h2 id="proteccion_seguridad" style="text-align: center; border-bottom: none;"> Protección y Seguridad</h2>
+
+
 
 ### **Ejercicio 1: Concepto y Objetivos de Protección y Seguridad**
 
@@ -2990,11 +3323,12 @@ Investiga cómo los lenguajes de programación pueden implementar mecanismos de 
 
 - **Proporciona un ejemplo de cómo un lenguaje como Java o Rust asegura la memoria y evita accesos no autorizados.**
 
-    En java, se tiene el control de tipos que basicamente sirve para que controlar que solo se puedan asignar valores del mismo tipo de la variable y esto ayuda a que no se usen valores en tipos de datos incorrectos lo evita que existan mas vulnerabilidades.
+    En java, se tiene el control de tipos de datos que basicamente sirve para que controlar que solo se puedan asignar valores del mismo tipo de la variable y esto ayuda a que no se usen valores en tipos de datos incorrectos lo evita que existan mas vulnerabilidades.
     Ademas tambien tienen los modificadores de acceso como el private o el protect que evitan que los datos datos y variables del programa sean modificados de manera no autorizada.
 
-- Compara este enfoque con otros mecanismos de protección en sistemas operativos.
+- **Compara este enfoque con otros mecanismos de protección en sistemas operativos.**
 
+    El sistema operativo tiene metodos de proteccion como la autentificacion de usuarios o la segmentacion y la paginacion de la memoria que ayuda a aislar y minimizar las amenazas pero esto es a nivel mas general del sistema operativo mientras que la proteccion basada a nivel de lenguaje va mas digida hacia los propios programas de los desarrolladores y como estos ayudan mediante el codigo a que el sistema protega de mejor manera los recursos que se utilizan en estos programas. Basicamente es como un complemento a la proteccion que ya de por si te ofrece el SO.
 ---
 
 ### **Ejercicio 6: Validación y Amenazas al Sistema**
@@ -3004,7 +3338,7 @@ Analiza las principales amenazas a un sistema operativo y los mecanismos de vali
 
 **Tareas:**
 
-- Investiga y describe al menos tres tipos de amenazas comunes (por ejemplo, malware, ataques de fuerza bruta, inyección de código).
+- **Investiga y describe al menos tres tipos de amenazas comunes (por ejemplo, malware, ataques de fuerza bruta, inyección de código).**
 
     **Spyware**: Este es un malware que se instala en las computadoras sin que el dueño del equipo sea conciente. Una vez que el programa se instala lo que hace es recopilar la informacion de esa computadora y la envia a terceros. Este tipo de malware es muy peligroso porque puede robar informacion muy sensible como numeros de tarjetas y contraseñas, ademas de que es muy dificil de detectar ya que no son visibles para el usuario al correr normalmente en segundo plano ademas de ser bastante facil el infectarse de ellos ya que suelen instalarse junto con otros programas, al descargar archivos de la web, etc.
 
@@ -3025,13 +3359,11 @@ Analiza las principales amenazas a un sistema operativo y los mecanismos de vali
 
 
 
-- Explica los mecanismos de validación como autenticación multifactor y control de integridad.
+- **Explica los mecanismos de validación como autenticación multifactor y control de integridad.**
 
     **Autentificacion multifactor:** La autenficiacion multifactor lo que hace es comprobar varias aspectos o factores del usuario antes de que se le de acceso. Por ejemplo, hay servicios que te pide aparte de tu usuario y contraseña el numero de telefono para comprobar que efectivamente eres tu o te piden que contestes informacion que solo tu conoces como el nombre de tu mascota. Este metodo ayuda bastante ya que le añade mas seguridad a las cuentas ya que ahora se evaluan multiples factores en lugar de solo el usuario la contraseña.
 
     **Control de integridad:** Este mecanismo lo que hace es asegurar que los archivos y datos del sistema no hayan sido alterados de manera no autorizada. Si un archivo se modifica sin los permisos adecuados el control de integridad lo detecta. Esto se puede hacer mediante el uso de sumas de verificación o hashing que básicamente generan un valor único para cada archivo o conjunto de datos y si el archivo cambia de alguna manera el valor generado también cambia. Lo que indica que algo ha sido alterado. Esto ayuda a prevenir ataques como la inyección de código o modificaciones maliciosas a los archivos del sistema.
-
-- Diseña un esquema de validación para un sistema operativo con múltiples usuarios.
 
 ---
 
@@ -3042,7 +3374,7 @@ Explora cómo los mecanismos de cifrado protegen la información en un sistema o
 
 **Tareas:**
 
-- Define los conceptos de cifrado simétrico y asimétrico.
+- **Define los conceptos de cifrado simétrico y asimétrico.**
 
     - **Cifrado simetrico:** El cifrado simetrico es el que utiliza una sola clave para cifrar y decifrar los datos. Este metodo es mas facil y rapido que otros porque se usa una misma clave compartida aunque tambien representa desventajas porque hay que mantener bien protegida esa contraseña. 
 
@@ -3052,20 +3384,40 @@ Explora cómo los mecanismos de cifrado protegen la información en un sistema o
 
         2.  *cifrados de flujo:* los cifrados de flujo cifran los datos de manera continua, bit a bit o byte a byte, a medida que se transmiten. Utilizan una secuencia de clave generada por un generador de números pseudoaleatorios
 
-        ![alt text](667ef10d87c94c75c89f6b90_62e05d65188c8cccca28ccd8_cifrado-simetrico-aes-1024x1024-1.avif)
+        ![alt text](imagenes/simetrico.avif)
         
     - **Cifrado asimetrico:** El cifrado asimetrico es lo contrario al simetrico porque se usan dos claves diferentes, una publica para el cifrado y otra privada para el decifrado.
 
         Las ventaja que tiene este tipo de cifrado es que es mas seguro que el simetrico porque se emprean dos claves diferentes y ya no se tiene que compartir una misma clave entre el receptor y el emisor por lo que se reducen las amenazas de que los hackers intercepten esta clave pero tambien es menos eficiente que el de simetrica por la misma razon de que se usan mas claves.
 
-    ![alt text](667ef1169c3bba2e4d714190_62e05d65188c8c1c5228ccef_cifrado-asimetrico-1024x1024.avif)
+    ![alt text](imagenes/asimetrico.avif)
 
-- Proporciona un ejemplo práctico de cada tipo de cifrado aplicado en sistemas operativos.
+- **Proporciona un ejemplo práctico de cada tipo de cifrado aplicado en sistemas operativos.**
 
     **cifrado simetrico:** Un ejemplo es BitLocker en Windows que usa cifrado AES para proteger todo lo que está en el disco duro. Cuando el BitLocker esta activado en windows todo se cifra con una única clave secreta. Esto ayuda a que si por ejemplo pierdo mi laptop y tratan de acceder al disco duro no van a poder hacerlo si no tienen la clave.
 
     **cifrado asimetrico:** Un ejemplo de cifrado asimetrico son los correos electronicos ya que las personas nos quieren mandar algun correo usan nuestra clave publica para enviar el correo cifrado y con nuestra clave privada podemos decifrar ese correo y de esta forma alguien que no tiene esa clave no puede leer el correo.
 
-- Simula el proceso de cifrado y descifrado de un archivo con una clave dada.
+- **Simula el proceso de cifrado y descifrado de un archivo con una clave dada.**
 
+    1. **Texto plano.**
+        Primero hay que tener un archivo en texto plano que va a ser cifrado. 
+
+        Por ejemplo una archivo con el texto 123456789.
+
+    2. **Algoritmo.**
+        Despues hay que escoger el algoritmo que vamos a usar para cifrar el mensaje como el AES
+
+    3. **Clave**
+        Despues hay que elegir la clave que se va a usar para cifrar y decifrar el mensaje.
+
+        En este ejemplo puede ser: holaprofe123
+
+    4. **Cifrado del texto**
+        El cifrado del texto a hacerse en funcion de la clave que establecimos porque esa es la que tiene la informacion de como el algoritmo encripto el mensaje
+
+        El texto cifrado con el algoritmo de AES y la clave de holaprofe123 quedaria un valor hexadecimal como 2a4d5f1a25856f307b7aeb1e1f8e8b97.
+
+    5. **Decifrado del texto**
+        Para desencriptar el texto se necesita la clave y esta convierte el mensaje a texto plano para que sea mas legible
 ---
