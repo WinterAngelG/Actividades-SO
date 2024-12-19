@@ -2759,9 +2759,15 @@ Crea un esquema que muestre la organización lógica y física de un sistema de 
 
 - **Diseña un árbol jerárquico que represente la organización lógica de directorios y subdirectorios.**
 
-![alt text](<Diagrama en blanco.jpeg>)
+![alt text](imagenes/directorio%20mio.jpeg)
 
 - **Explica cómo se traduce la dirección lógica a la dirección física en el disco.**
+
+    Basicamente la direccion logica es en realidad una representacion de la direccion fisica de donde se guarda nuestros archivos en el disco duro.
+
+    Lo que hacen los gestores de archivos como el NTFS en windows es que divide el disco en bloques y a esos bloques les asigna direcciones especificas para los archivos.
+
+    Entonces lo que hace el sistema es mediante un indice de una tabla como la MFT asociar estos bloques fisicos con los archivos. De esta forma, cuando se accede a un archivo el sistema operativo busca su referencia en esa tabla y traduce la dirección lógica a una secuencia de bloques físicos, y luego envía instrucciones al controlador del disco para leer o escribir en esos bloques. 
 
 - **Proporciona un ejemplo práctico de cómo un archivo se almacena físicamente.**
 
@@ -2779,14 +2785,13 @@ Simula diferentes mecanismos de acceso a archivos (secuencial, directo e indexad
 
     **Acceso secuencial**: En este mecanismo, como lo dice su nombre se accede al archivo de manera secuencial, es decir que el proceso que esta leyendo el archivo va byte por byte o registro por registro de manera ordenada y no puede saltarse ninguna parte.
 
-    **Aceso por indice:** Este mecanismo utiliza una especie de "índice" o tabla que te dice exactamente dónde están los datos dentro del archivo. Así, en lugar de leer todo el archivo, puedes buscar rápidamente la ubicación de la información que necesitas, lo que ahorra tiempo y recursos.
+    **Aceso por indice:** Este mecanismo utiliza una especie de "índice" o tabla que te dice exactamente dónde están los datos dentro del archivo. Así, en lugar de leer todo el archivo se puede buscar la ubicación exacta de la información, lo que ahorra tiempo y recursos.
 
     **Acceso directamente por posicion:** En este mecanismo, se puede acceder a un archivo directamente en la parte que se necesita, sin tener que leer todo desde el principio
 
 2.  **Escribe un pseudocódigo que muestre cómo acceder a:**
 
     - **Un archivo secuencialmente.**
-
 
         ```
         abrir archivo "archivo.txt" en modo lectura
@@ -2799,7 +2804,7 @@ Simula diferentes mecanismos de acceso a archivos (secuencial, directo e indexad
 
         ```
         abrir archivo "archivo.txt" en modo lectura/escritura
-        mover a la posición deseada (por ejemplo, byte 1000)
+        mover a la posición deseada 
         leer datos en esa posición
         cerrar archivo
         ```
@@ -2811,6 +2816,7 @@ Simula diferentes mecanismos de acceso a archivos (secuencial, directo e indexad
         leer datos en esa posición
         cerrar archivo
         ```
+
 3.  **Compara las ventajas de cada mecanismo dependiendo del caso de uso.**
 
     El acceso secuencial es útil cuando se trabaja con archivos pequeños o cuando se necesita leer todo el contenido en orden ya que es simple y no requiere estructuras adicionales. Es eficiente en términos de recursos, pero no es adecuado para archivos grandes donde se busca información específica. En cambio, el acceso por índice es ideal para archivos grandes o bases de datos ya que permite encontrar rápidamente los datos sin tener que leer todo el archivo mejorando así el rendimiento en búsquedas. Por otro lado, el acceso directo por posición es perfecto cuando se necesita acceder a partes específicas de un archivo grande como en archivos binarios o bases de datos ya que permite saltar directamente a la ubicación deseada sin recorrer el archivo completo.
@@ -2825,6 +2831,8 @@ Diseña una estructura jerárquica para un sistema de archivos y simula un escen
 **Tareas:**
 
 - **Diseña un modelo jerárquico para un sistema de archivos con al menos tres niveles de directorios.**
+
+![alt text](<Copia de Diagrama en blanco(1).png>)
 
 - **Simula una falla en un directorio específico y describe los pasos necesarios para recuperarlo.**
 
@@ -2939,11 +2947,33 @@ Crea e implementa una matriz de acceso para un sistema que contiene usuarios y r
 
 **Tareas:**
 
-- Diseña una matriz de acceso para un sistema con al menos 3 usuarios y 4 recursos.
+- **Diseña una matriz de acceso para un sistema con al menos 3 usuarios y 4 recursos.**
 
-- Explica cómo esta matriz se utiliza para controlar el acceso en un sistema operativo.
+| **Usuarios/Recursos**  | Gestión de usuarios | Gestión de libros | Consulta de libros | Descarga de libros |
+|------------------------|---------------------|-------------------|--------------------|--------------------|
+| **Admin**             | Administrar usuarios | Administrar libros | Consultar libros   | Descargar libros   |
+| **Profesor**          | Ninguno             | Administrar libros | Consultar libros   | Descargar libros   |
+| **Estudiante**        | Ninguno             | Ninguno            | Consultar libros   | Descargar libros   |
 
-- Simula un escenario donde un usuario intenta acceder a un recurso no permitido y cómo la matriz lo bloquea.
+- **Explica cómo esta matriz se utiliza para controlar el acceso en un sistema operativo.**
+
+    La matriz de arriba es de una sistema de una biblioteca que tiene 3 usuarios y 4 recursos.
+
+    Los usuarios que tiene son_ Admin, Profesor y Estudiante.
+    Los recursos son:Gestion de usuarios, gestion de libros, consulta de libros y descarga de libros.
+
+    La forma en la que la matriz funciona es que dependiendo del usuario este tiene acceso solo a algunos recursos del sistema, a excepcion del administrador que si tiene acceso a todos los recursos
+    Por ejemplo:
+
+    El admin tiene acceso completo a todos los recursos, ya que gestiona la plataforma.
+    El profesor puede gestionar los libros y tiene acceso a consultar y descargar libros pero no puede gestionar usuarios.
+
+    El estudiante solo tiene acceso para consultar y descargar los libros de libros pero no puede gestionar usuarios ni modificar el catálogo de los libros.
+
+
+- **Simula un escenario donde un usuario intenta acceder a un recurso no permitido y cómo la matriz lo bloquea.**
+
+    Por ejemplo, si un estudiante quiere eliminar a algun profesor del sistema. Si el estudiante intenta esa accion el sistema no lo dejaria realizarlo ya que primero verificaria si el estudiante tiene acceso y permiso a realizar esta accion pero como no la tiene no lo permite eliminar al profesor y le mostraria algun mensaje de acceso denegado o que no se pudo realizar esa accion.
 
 ---
 
@@ -2963,8 +2993,6 @@ Investiga cómo los lenguajes de programación pueden implementar mecanismos de 
     En java, se tiene el control de tipos que basicamente sirve para que controlar que solo se puedan asignar valores del mismo tipo de la variable y esto ayuda a que no se usen valores en tipos de datos incorrectos lo evita que existan mas vulnerabilidades.
     Ademas tambien tienen los modificadores de acceso como el private o el protect que evitan que los datos datos y variables del programa sean modificados de manera no autorizada.
 
-
-s
 - Compara este enfoque con otros mecanismos de protección en sistemas operativos.
 
 ---
@@ -2993,7 +3021,7 @@ Analiza las principales amenazas a un sistema operativo y los mecanismos de vali
     Estos ransomeware se pueden clasificar según sus metodos y maneras de extorsion. Algunos de estos son:
     - *Ransomeware de cifrado:* Este es el mas común y lo que hace es usar tecnicas para encriptar los archivos del usuario y que de esta manera no pueda acceder a ellos a menos que pague y le den la llave para desencriptar.
 
-    - *Ransomeware de pantalla de bloqueo:*Este es mas viejo y menos usado pero aun se usa y lo que hace es bloquear la pantalla de acceso de la computadora y no deja entrar al usuario hasta que se pague. Esta forma es mas facil de eliminar y la que menos daño hace y es por eso que ya no la usan tanto.
+    - *Ransomeware de pantalla de bloqueo:* Este es mas viejo y menos usado pero aun se usa y lo que hace es bloquear la pantalla de acceso de la computadora y no deja entrar al usuario hasta que se pague. Esta forma es mas facil de eliminar y la que menos daño hace y es por eso que ya no la usan tanto.
 
 
 
@@ -3015,7 +3043,29 @@ Explora cómo los mecanismos de cifrado protegen la información en un sistema o
 **Tareas:**
 
 - Define los conceptos de cifrado simétrico y asimétrico.
+
+    - **Cifrado simetrico:** El cifrado simetrico es el que utiliza una sola clave para cifrar y decifrar los datos. Este metodo es mas facil y rapido que otros porque se usa una misma clave compartida aunque tambien representa desventajas porque hay que mantener bien protegida esa contraseña. 
+
+        El cifrado simetrico se puede clasificar en 2 tipos:
+
+        1.  *cifrados de bloque:* En los cifrados de bloque, los datos de entrada se dividen en bloques de un tamaño específico. La operación de cifrado se realiza mediante una función matemática que involucra tanto los datos del bloque como una clave secreta.
+
+        2.  *cifrados de flujo:* los cifrados de flujo cifran los datos de manera continua, bit a bit o byte a byte, a medida que se transmiten. Utilizan una secuencia de clave generada por un generador de números pseudoaleatorios
+
+        ![alt text](667ef10d87c94c75c89f6b90_62e05d65188c8cccca28ccd8_cifrado-simetrico-aes-1024x1024-1.avif)
+        
+    - **Cifrado asimetrico:** El cifrado asimetrico es lo contrario al simetrico porque se usan dos claves diferentes, una publica para el cifrado y otra privada para el decifrado.
+
+        Las ventaja que tiene este tipo de cifrado es que es mas seguro que el simetrico porque se emprean dos claves diferentes y ya no se tiene que compartir una misma clave entre el receptor y el emisor por lo que se reducen las amenazas de que los hackers intercepten esta clave pero tambien es menos eficiente que el de simetrica por la misma razon de que se usan mas claves.
+
+    ![alt text](667ef1169c3bba2e4d714190_62e05d65188c8c1c5228ccef_cifrado-asimetrico-1024x1024.avif)
+
 - Proporciona un ejemplo práctico de cada tipo de cifrado aplicado en sistemas operativos.
+
+    **cifrado simetrico:** Un ejemplo es BitLocker en Windows que usa cifrado AES para proteger todo lo que está en el disco duro. Cuando el BitLocker esta activado en windows todo se cifra con una única clave secreta. Esto ayuda a que si por ejemplo pierdo mi laptop y tratan de acceder al disco duro no van a poder hacerlo si no tienen la clave.
+
+    **cifrado asimetrico:** Un ejemplo de cifrado asimetrico son los correos electronicos ya que las personas nos quieren mandar algun correo usan nuestra clave publica para enviar el correo cifrado y con nuestra clave privada podemos decifrar ese correo y de esta forma alguien que no tiene esa clave no puede leer el correo.
+
 - Simula el proceso de cifrado y descifrado de un archivo con una clave dada.
 
 ---
